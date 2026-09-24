@@ -4,9 +4,9 @@ import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth';
 import { formatDate } from '@/lib/format';
 import type { OrganizationMember, OrganizationInvitation, Profile, MemberRole, JoinRequest } from '@/types';
-import { Users, Mail, Clock, Check, X, Crown, Shield, Briefcase, UserCog, Copy, Link2, Building2, Loader2, Hash, Search, UserPlus, Inbox } from 'lucide-react';
+import { Mail, Clock, Check, X, Crown, Shield, Briefcase, UserCog, Copy, Link2, Building2, Loader2, Hash, Search, UserPlus, Inbox } from 'lucide-react';
 
-type MemberWithProfile = OrganizationMember & { profile: Profile | null };
+type MemberWithProfile = Omit<OrganizationMember, 'profile'> & { profile: Profile | null };
 type InviteWithOrg = OrganizationInvitation & { organization?: { name: string } };
 type JoinRequestWithRelations = JoinRequest & {
   organization?: { name: string };
@@ -190,7 +190,7 @@ export function TeamPage() {
     const [membersRes, invitesRes, joinReqsRes] = await Promise.all([
       supabase
         .from('organization_members')
-        .select('*, profile:profiles!organization_members_user_id_fkey(*)')
+        .select('*')
         .eq('organization_id', currentOrgId)
         .order('created_at', { ascending: true }),
       supabase
@@ -205,7 +205,13 @@ export function TeamPage() {
         .order('created_at', { ascending: false }),
     ]);
 
-    setMembers((membersRes.data as MemberWithProfile[]) || []);
+    // organization_members.user_id references auth.users, so profiles cannot be embedded; join here.
+    const memberRows = (membersRes.data as OrganizationMember[]) || [];
+    const { data: memberProfiles } = memberRows.length
+      ? await supabase.from('profiles').select('*').in('id', memberRows.map((m) => m.user_id))
+      : { data: [] as Profile[] };
+    const profileById = new Map(((memberProfiles as Profile[]) || []).map((p) => [p.id, p]));
+    setMembers(memberRows.map((m) => ({ ...m, profile: profileById.get(m.user_id) ?? null })));
     setInvitations((invitesRes.data as InviteWithOrg[]) || []);
     setJoinRequests((joinReqsRes.data as JoinRequestWithRelations[]) || []);
     setLoading(false);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { RefreshCw, CreditCard, ArrowUpRight, Check, X } from 'lucide-react';
+import { RefreshCw, ArrowUpRight, Check } from 'lucide-react';
 import { AccountLayout } from '@/components/account/AccountLayout';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth';

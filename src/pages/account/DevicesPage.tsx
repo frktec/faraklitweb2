@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AccountLayout } from '@/components/account/AccountLayout';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth';
@@ -11,7 +11,7 @@ export function DevicesPage() {
   const [license, setLicense] = useState<License | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchDevices = async () => {
+  const fetchDevices = useCallback(async () => {
     if (!profile) { setLoading(false); return; }
     const { data: dev } = await supabase
       .from('devices')
@@ -29,11 +29,11 @@ export function DevicesPage() {
       .maybeSingle();
     setLicense(lic as License | null);
     setLoading(false);
-  };
+  }, [profile]);
 
   useEffect(() => {
     fetchDevices();
-  }, [profile]);
+  }, [fetchDevices]);
 
   const handleRevoke = async (deviceId: string) => {
     if (!confirm('Bu cihazın yetkisini kaldırmak istediğinize emin misiniz?')) return;

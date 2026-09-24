@@ -16,7 +16,7 @@ export function FounderStatement() {
 
           <div aria-label="Av. Furkan Tunca imzası" className="h-[64px] w-[205px] overflow-hidden sm:h-[72px] sm:w-[240px]">
             <img
-              src="/image%20copy.png"
+              src="/assets/images/founder-signature.png"
               alt="Av. Furkan Tunca imzası"
               className="h-auto w-full -translate-y-[1px] mix-blend-multiply"
             />
