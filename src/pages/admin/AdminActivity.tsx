@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { supabase } from '@/lib/supabase';
 import { formatDateTime } from '@/lib/format';
+import { fetchProfileMap } from '@/lib/profiles';
 
 type ActivityRow = {
   id: string;
@@ -9,7 +10,8 @@ type ActivityRow = {
   app_version: string;
   platform: string;
   created_at: string;
-  user: { full_name: string; email: string };
+  user_id: string;
+  user?: { full_name: string; email: string };
 };
 
 const eventLabels: Record<string, string> = {
@@ -33,19 +35,21 @@ export function AdminActivity() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    supabase
-      .from('activity_events')
-      .select('id, event_name, app_version, platform, created_at, user:profiles!activity_events_user_id_fkey(full_name, email)')
-      .order('created_at', { ascending: false })
-      .limit(100)
-      .then(({ data, error: err }) => {
-        if (err) {
-          setError(true);
-        } else {
-          setActivities((data as unknown as ActivityRow[]) || []);
-        }
-        setLoading(false);
-      });
+    (async () => {
+      const { data, error: err } = await supabase
+        .from('activity_events')
+        .select('id, user_id, event_name, app_version, platform, created_at')
+        .order('created_at', { ascending: false })
+        .limit(100);
+      if (err) {
+        setError(true);
+      } else {
+        const rows = (data as ActivityRow[]) || [];
+        const profiles = await fetchProfileMap(rows.map((r) => r.user_id));
+        setActivities(rows.map((r) => ({ ...r, user: profiles[r.user_id] })));
+      }
+      setLoading(false);
+    })();
   }, []);
 
   if (loading) {

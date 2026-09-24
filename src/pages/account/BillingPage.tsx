@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { RefreshCw, ArrowUpRight, Check } from 'lucide-react';
+import { RefreshCw, ArrowUpRight, Check, Printer } from 'lucide-react';
 import { AccountLayout } from '@/components/account/AccountLayout';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth';
 import { formatPrice, formatDate } from '@/lib/format';
-import type { Invoice, Subscription, Plan } from '@/types';
+import { openInvoice } from '@/lib/documents';
+import type { Invoice, Payment, Subscription, Plan } from '@/types';
+
+type InvoiceWithPayment = Invoice & { payment: Pick<Payment, 'order_number' | 'order_type' | 'periods' | 'credits'> & { plan: { name: string } | null } | null };
 
 export function BillingPage() {
   const { profile } = useAuth();
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [invoices, setInvoices] = useState<InvoiceWithPayment[]>([]);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,10 +26,10 @@ export function BillingPage() {
     (async () => {
       const { data: inv } = await supabase
         .from('invoices')
-        .select('*')
+        .select('*, payment:payments(order_number, order_type, periods, credits, plan:plans(name))')
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
-      setInvoices((inv as Invoice[]) || []);
+      setInvoices((inv as unknown as InvoiceWithPayment[]) || []);
 
       const { data: sub } = await supabase
         .from('subscriptions')
@@ -143,7 +146,7 @@ export function BillingPage() {
                   )}
                 </div>
                 <p className="mt-2 text-[20px] font-semibold text-ink-950">{formatPrice(plan.price_cents)}</p>
-                <p className="text-[14px] text-ink-400">/ yıl</p>
+                <p className="text-[14px] text-ink-400">/ {plan.billing_period === 'month' ? 'ay' : 'yıl'}</p>
                 <div className="mt-4 space-y-1.5">
                   <PlanFeature text={`${plan.user_limit} kullanıcı`} />
                   <PlanFeature text={`${plan.device_limit} cihaz`} />
@@ -155,10 +158,10 @@ export function BillingPage() {
                   </div>
                 ) : (
                   <Link
-                    to={`/checkout?plan=${plan.id}`}
+                    to={`/checkout?type=${subscription ? 'plan_change' : 'new'}&plan=${plan.id}`}
                     className="btn-secondary mt-4 w-full text-center"
                   >
-                    {subscription ? 'Yükselt' : 'Satın Al'}
+                    {subscription ? 'Bu pakete geç' : 'Satın Al'}
                   </Link>
                 )}
               </div>
@@ -183,6 +186,7 @@ export function BillingPage() {
                   <th className="pb-2.5 pr-4 text-[14px] font-medium uppercase tracking-wider text-ink-400">Tarih</th>
                   <th className="pb-2.5 pr-4 text-[14px] font-medium uppercase tracking-wider text-ink-400">Tutar</th>
                   <th className="pb-2.5 pr-4 text-[14px] font-medium uppercase tracking-wider text-ink-400">Durum</th>
+                  <th className="pb-2.5 pr-4" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-ink-100">
@@ -199,6 +203,12 @@ export function BillingPage() {
                       }`}>
                         {inv.status === 'paid' ? 'Ödendi' : inv.status === 'void' ? 'İptal' : 'Düzenlendi'}
                       </span>
+                    </td>
+                    <td className="py-3 pr-4">
+                      <button onClick={() => openInvoice(inv, inv.payment || undefined)} className="flex items-center gap-1 text-[14px] font-medium text-ink-600 hover:text-ink-900">
+                        <Printer size={13} />
+                        Görüntüle
+                      </button>
                     </td>
                   </tr>
                 ))}

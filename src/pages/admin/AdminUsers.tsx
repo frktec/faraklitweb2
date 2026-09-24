@@ -1,200 +1,149 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search } from 'lucide-react';
+import { Download, Search } from 'lucide-react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
+import { Badge, ErrorNote, Loading, Metric, MetricGrid, PageHeader, Table, Td } from '@/components/ui';
 import { supabase } from '@/lib/supabase';
-import { formatShortDate } from '@/lib/format';
+import { formatNumber, formatPrice, formatShortDate } from '@/lib/format';
+import { effectiveLicenseStatus, licenseStatusLabel } from '@/lib/labels';
+import { downloadCsv } from '@/lib/documents';
+import type { AdminUserRow } from '@/types';
 
-type UserRow = {
-  id: string;
-  full_name: string;
-  email: string;
-  created_at: string;
-  account_type: string;
-  role: string;
-};
-
-type UserWithLicense = UserRow & {
-  plan_name: string | null;
-  license_status: string | null;
-  license_ends_at: string | null;
-  device_count: number;
-  last_activity: string | null;
-};
+type Filter = 'all' | 'active' | 'expired' | 'no_license' | 'pending' | 'low_credit' | 'individual' | 'organization';
+type Sort = 'created' | 'jobs' | 'credits' | 'paid' | 'activity';
 
 export function AdminUsers() {
   const navigate = useNavigate();
-  const [users, setUsers] = useState<UserWithLicense[]>([]);
-  const [filtered, setFiltered] = useState<UserWithLicense[]>([]);
+  const [users, setUsers] = useState<AdminUserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState<string>('all');
+  const [filter, setFilter] = useState<Filter>('all');
+  const [sort, setSort] = useState<Sort>('created');
 
   useEffect(() => {
-    (async () => {
-      try {
-        const { data: profiles, error: err } = await supabase
-          .from('profiles')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (err) throw err;
-
-        const profileRows = (profiles as UserRow[]) || [];
-
-        const enriched: UserWithLicense[] = await Promise.all(
-          profileRows.map(async (p) => {
-            const { data: lic } = await supabase
-              .from('licenses')
-              .select('status, ends_at, plan:plans(name)')
-              .eq('user_id', p.id)
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .maybeSingle();
-
-            const { count: deviceCount } = await supabase
-              .from('devices')
-              .select('*', { count: 'exact', head: true })
-              .eq('user_id', p.id)
-              .eq('is_active', true);
-
-            const { data: activity } = await supabase
-              .from('activity_events')
-              .select('created_at')
-              .eq('user_id', p.id)
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .maybeSingle();
-
-            const licData = lic as { status: string; ends_at: string; plan: { name: string } } | null;
-            return {
-              ...p,
-              plan_name: licData?.plan?.name || null,
-              license_status: licData?.status || null,
-              license_ends_at: licData?.ends_at || null,
-              device_count: deviceCount || 0,
-              last_activity: activity?.created_at || null,
-            };
-          })
-        );
-
-        setUsers(enriched);
-        setFiltered(enriched);
-      } catch {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    })();
+    supabase.rpc('admin_user_overview').then(({ data, error: err }) => {
+      if (err) setError(true);
+      else setUsers((data as AdminUserRow[]) || []);
+      setLoading(false);
+    });
   }, []);
 
-  useEffect(() => {
-    let result = users;
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (u) =>
-          u.full_name?.toLowerCase().includes(q) ||
-          u.email?.toLowerCase().includes(q)
-      );
-    }
-    if (filter !== 'all') {
-      if (filter === 'active') result = result.filter((u) => u.license_status === 'active');
-      else if (filter === 'expired') result = result.filter((u) => u.license_status === 'expired');
-      else if (filter === 'individual') result = result.filter((u) => u.account_type === 'individual');
-      else if (filter === 'organization') result = result.filter((u) => u.account_type === 'organization');
-    }
-    setFiltered(result);
-  }, [search, filter, users]);
+  const filtered = useMemo(() => {
+    const q = search.trim().toLocaleLowerCase('tr');
+    const rows = users.filter((u) => {
+      if (q && ![u.full_name, u.email, u.organization_name, u.phone, u.bar_association]
+        .some((v) => v?.toLocaleLowerCase('tr').includes(q))) return false;
+      const status = effectiveLicenseStatus(u.license_status, u.license_ends_at);
+      switch (filter) {
+        case 'active': return status === 'active';
+        case 'expired': return status === 'expired' || status === 'cancelled' || status === 'suspended';
+        case 'no_license': return !status;
+        case 'pending': return u.pending_orders > 0;
+        case 'low_credit': return status === 'active' && u.credit_balance < 50;
+        case 'individual': return u.account_type === 'individual';
+        case 'organization': return u.account_type === 'organization';
+        default: return true;
+      }
+    });
+    const key: Record<Sort, (u: AdminUserRow) => number> = {
+      created: (u) => new Date(u.created_at).getTime(),
+      jobs: (u) => u.jobs_30d,
+      credits: (u) => u.credit_balance,
+      paid: (u) => u.total_paid_cents,
+      activity: (u) => (u.last_activity ? new Date(u.last_activity).getTime() : 0),
+    };
+    return [...rows].sort((a, b) => key[sort](b) - key[sort](a));
+  }, [users, search, filter, sort]);
 
-  if (loading) {
-    return <AdminLayout><div className="text-sm text-ink-400">Yükleniyor…</div></AdminLayout>;
-  }
+  const totals = useMemo(() => ({
+    active: users.filter((u) => effectiveLicenseStatus(u.license_status, u.license_ends_at) === 'active').length,
+    credits: users.reduce((s, u) => s + u.credit_balance, 0),
+    jobs30: users.reduce((s, u) => s + u.jobs_30d, 0),
+    paid: users.reduce((s, u) => s + Number(u.total_paid_cents), 0),
+  }), [users]);
 
-  if (error) {
-    return <AdminLayout>
-      <h1 className="text-[24px] font-semibold tracking-tight text-ink-950">Kullanıcılar</h1>
-      <p className="mt-6 text-[16px] text-red-600">Veriler yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.</p>
-    </AdminLayout>;
-  }
+  const exportCsv = () => {
+    downloadCsv(`faraklit-kullanicilar-${new Date().toISOString().slice(0, 10)}.csv`,
+      ['Ad Soyad', 'E-posta', 'Telefon', 'Hesap', 'Büro', 'Paket', 'Lisans', 'Lisans Bitiş', 'Aktif Cihaz', 'Kredi', 'Harcanan Kredi', 'İş (30g)', 'İş (toplam)', 'Toplam Ödeme (TL)', 'Kayıt', 'Son Aktivite'],
+      filtered.map((u) => [
+        u.full_name, u.email, u.phone, u.account_type === 'organization' ? 'Kurumsal' : 'Bireysel', u.organization_name,
+        u.plan_name, u.license_status ? licenseStatusLabel[effectiveLicenseStatus(u.license_status, u.license_ends_at)!].label : '',
+        u.license_ends_at ? formatShortDate(u.license_ends_at) : '', u.active_devices, u.credit_balance, u.credits_spent,
+        u.jobs_30d, u.jobs_total, (Number(u.total_paid_cents) / 100).toFixed(2).replace('.', ','),
+        formatShortDate(u.created_at), u.last_activity ? formatShortDate(u.last_activity) : '',
+      ]));
+  };
+
+  if (loading) return <AdminLayout><Loading /></AdminLayout>;
+  if (error) return <AdminLayout><PageHeader title="Kullanıcılar" /><ErrorNote /></AdminLayout>;
 
   return (
     <AdminLayout>
-      <h1 className="text-[24px] font-semibold tracking-tight text-ink-950">Kullanıcılar</h1>
+      <PageHeader
+        title="Kullanıcılar"
+        description="Tüm kullanıcıların lisans, kredi, iş üretimi ve ödeme bilgileri."
+        actions={<button onClick={exportCsv} className="btn-secondary"><Download size={15} />CSV indir</button>}
+      />
 
-      {/* Filters */}
+      <MetricGrid>
+        <Metric label="Kullanıcı" value={formatNumber(users.length)} hint={`${formatNumber(totals.active)} aktif lisans`} />
+        <Metric label="Toplam kredi bakiyesi" value={formatNumber(totals.credits)} />
+        <Metric label="Son 30 gün iş" value={formatNumber(totals.jobs30)} />
+        <Metric label="Toplam tahsilat" value={formatPrice(totals.paid)} />
+      </MetricGrid>
+
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="relative flex-1 max-w-[320px]">
+        <div className="relative flex-1 sm:max-w-[340px]">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Ad, e-posta ara…"
-            className="input-field pl-9"
-          />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Ad, e-posta, büro, baro ara…" className="input-field pl-9" />
         </div>
-        <select value={filter} onChange={(e) => setFilter(e.target.value)} className="input-field sm:w-44">
+        <select value={filter} onChange={(e) => setFilter(e.target.value as Filter)} className="input-field sm:w-52">
           <option value="all">Tümü</option>
-          <option value="active">Aktif</option>
-          <option value="expired">Süresi Dolmuş</option>
+          <option value="active">Aktif lisans</option>
+          <option value="expired">Süresi dolmuş / askıda</option>
+          <option value="no_license">Lisanssız</option>
+          <option value="pending">Bekleyen siparişi olan</option>
+          <option value="low_credit">Kredisi azalan (&lt; 50)</option>
           <option value="individual">Bireysel</option>
           <option value="organization">Kurumsal</option>
         </select>
+        <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} className="input-field sm:w-52">
+          <option value="created">Sırala: Kayıt tarihi</option>
+          <option value="activity">Sırala: Son aktivite</option>
+          <option value="jobs">Sırala: İş (30 gün)</option>
+          <option value="credits">Sırala: Kredi bakiyesi</option>
+          <option value="paid">Sırala: Toplam ödeme</option>
+        </select>
+        <span className="text-[14px] text-ink-400 sm:ml-auto">{formatNumber(filtered.length)} kayıt</span>
       </div>
 
-      {/* Table */}
-      <div className="mt-6 overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-ink-200 text-left">
-              <Th>Ad Soyad</Th>
-              <Th>E-posta</Th>
-              <Th>Paket</Th>
-              <Th>Durum</Th>
-              <Th>Kayıt</Th>
-              <Th>Son Aktivite</Th>
-              <Th>Lisans Bitiş</Th>
-              <Th>Cihaz</Th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-ink-100">
-            {filtered.map((u) => (
-              <tr
-                key={u.id}
-                onClick={() => navigate(`/admin/users/${u.id}`)}
-                className="cursor-pointer text-[15px] transition-colors hover:bg-ink-50"
-              >
-                <td className="py-3 pr-4 font-medium text-ink-800">{u.full_name || '—'}</td>
-                <td className="py-3 pr-4 text-ink-600">{u.email}</td>
-                <td className="py-3 pr-4 text-ink-600">{u.plan_name || '—'}</td>
-                <td className="py-3 pr-4">
-                  {u.license_status ? (
-                    <span className={`rounded-[5px] px-2 py-0.5 text-[13px] ${
-                      u.license_status === 'active' ? 'bg-emerald-50 text-emerald-700' :
-                      u.license_status === 'expired' ? 'bg-red-50 text-red-700' :
-                      'bg-ink-100 text-ink-600'
-                    }`}>
-                      {u.license_status === 'active' ? 'Aktif' : u.license_status === 'expired' ? 'Süresi Dolmuş' : u.license_status}
-                    </span>
-                  ) : (
-                    <span className="text-ink-400">—</span>
-                  )}
-                </td>
-                <td className="py-3 pr-4 text-ink-500">{formatShortDate(u.created_at)}</td>
-                <td className="py-3 pr-4 text-ink-500">{u.last_activity ? formatShortDate(u.last_activity) : '—'}</td>
-                <td className="py-3 pr-4 text-ink-500">{u.license_ends_at ? formatShortDate(u.license_ends_at) : '—'}</td>
-                <td className="py-3 pr-4 text-ink-600">{u.device_count}</td>
+      <div className="mt-4">
+        <Table head={['Kullanıcı', 'Paket', 'Lisans', 'Bitiş', 'Kredi', 'İş (30g / toplam)', 'Ödeme', 'Cihaz', 'Son aktivite']} empty={filtered.length === 0}>
+          {filtered.map((u) => {
+            const status = effectiveLicenseStatus(u.license_status, u.license_ends_at);
+            return (
+              <tr key={u.id} onClick={() => navigate(`/admin/users/${u.id}`)} className="cursor-pointer transition-colors hover:bg-ink-50">
+                <Td>
+                  <p className="font-medium text-ink-900">{u.full_name || '—'}</p>
+                  <p className="text-[13px] text-ink-400">{u.email}{u.organization_name ? ` · ${u.organization_name}` : ''}</p>
+                </Td>
+                <Td>{u.plan_name || '—'}</Td>
+                <Td>{status ? <Badge tone={licenseStatusLabel[status].tone}>{licenseStatusLabel[status].label}</Badge> : <span className="text-ink-400">Yok</span>}</Td>
+                <Td className="text-ink-500">{u.license_ends_at ? formatShortDate(u.license_ends_at) : '—'}</Td>
+                <Td className={u.credit_balance < 50 && status === 'active' ? 'font-medium text-amber-700' : ''}>{formatNumber(u.credit_balance)}</Td>
+                <Td>{formatNumber(u.jobs_30d)} <span className="text-ink-400">/ {formatNumber(u.jobs_total)}</span></Td>
+                <Td>
+                  {formatPrice(Number(u.total_paid_cents))}
+                  {u.pending_orders > 0 && <span className="ml-2"><Badge tone="amber">{u.pending_orders} bekliyor</Badge></span>}
+                </Td>
+                <Td>{u.active_devices}</Td>
+                <Td className="text-ink-500">{u.last_activity ? formatShortDate(u.last_activity) : '—'}</Td>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            );
+          })}
+        </Table>
       </div>
     </AdminLayout>
   );
-}
-
-function Th({ children }: { children: React.ReactNode }) {
-  return <th className="pb-2.5 pr-4 text-[14px] font-medium uppercase tracking-wider text-ink-400">{children}</th>;
 }

@@ -15,6 +15,7 @@ export type Plan = {
   features: string[];
   is_active: boolean;
   sort_order: number;
+  included_credits: number;
 };
 
 export type Profile = {
@@ -108,19 +109,139 @@ export type Device = {
   created_at: string;
 };
 
+export type OrderType = 'new' | 'renewal' | 'plan_change' | 'credits';
+export type PaymentStatus = 'pending' | 'completed' | 'failed' | 'refunded' | 'cancelled';
+
+export type BillingInfo = {
+  name: string;
+  tax_id: string;
+  tax_office: string;
+  address: string;
+  city: string;
+  phone: string;
+  email: string;
+};
+
 export type Payment = {
   id: string;
   user_id: string;
   subscription_id: string | null;
-  plan_id: string;
+  plan_id: string | null;
   order_number: string;
+  order_type: OrderType;
+  periods: number;
+  credits: number;
+  credit_package_id: string | null;
+  target_subscription_id: string | null;
   amount_cents: number;
   currency: string;
-  status: 'pending' | 'completed' | 'failed' | 'refunded';
+  status: PaymentStatus;
   provider: string;
   provider_payment_id: string;
+  billing: Partial<BillingInfo>;
+  paid_at: string | null;
+  admin_note: string;
   created_at: string;
-  plan?: Plan;
+  plan?: Plan | null;
+  credit_package?: CreditPackage | null;
+};
+
+export type CreditPackage = {
+  id: string;
+  slug: string;
+  name: string;
+  credits: number;
+  price_cents: number;
+  currency: string;
+  is_active: boolean;
+  sort_order: number;
+};
+
+export type CreditWallet = {
+  user_id: string;
+  balance: number;
+  lifetime_earned: number;
+  lifetime_spent: number;
+  updated_at: string;
+};
+
+export type CreditTransactionKind = 'purchase' | 'plan_grant' | 'usage' | 'admin_grant' | 'admin_deduct' | 'refund';
+
+export type CreditTransaction = {
+  id: string;
+  user_id: string;
+  amount: number;
+  balance_after: number;
+  kind: CreditTransactionKind;
+  description: string;
+  job_id: string | null;
+  payment_id: string | null;
+  created_by: string | null;
+  created_at: string;
+};
+
+export type JobType = {
+  key: string;
+  label: string;
+  credit_cost: number;
+  is_active: boolean;
+  sort_order: number;
+};
+
+export type Job = {
+  id: string;
+  user_id: string;
+  organization_id: string | null;
+  license_id: string | null;
+  job_type: string;
+  status: 'completed' | 'failed';
+  quantity: number;
+  credits_used: number;
+  duration_ms: number | null;
+  app_version: string;
+  platform: string;
+  created_at: string;
+};
+
+export type AdminUserRow = {
+  id: string;
+  email: string;
+  full_name: string;
+  phone: string;
+  account_type: AccountType;
+  bar_association: string;
+  created_at: string;
+  organization_name: string | null;
+  plan_name: string | null;
+  license_id: string | null;
+  license_status: License['status'] | null;
+  license_ends_at: string | null;
+  active_devices: number;
+  last_activity: string | null;
+  credit_balance: number;
+  credits_spent: number;
+  jobs_total: number;
+  jobs_30d: number;
+  total_paid_cents: number;
+  pending_orders: number;
+};
+
+export type DashboardStats = {
+  total_users: number;
+  new_users_month: number;
+  active_licenses: number;
+  expiring_licenses: number;
+  revenue_total: number;
+  revenue_month: number;
+  pending_orders: number;
+  pending_amount: number;
+  credits_outstanding: number;
+  credits_used_month: number;
+  jobs_month: number;
+  jobs_total: number;
+  revenue_by_month: { month: string; amount: number }[];
+  jobs_by_day: { day: string; count: number; credits: number }[];
+  jobs_by_type: { key: string; label: string; count: number; credits: number }[];
 };
 
 export type Invoice = {
