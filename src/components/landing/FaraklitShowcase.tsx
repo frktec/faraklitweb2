@@ -12,7 +12,7 @@ const capabilities = [
   ['05', 'Takvim ve Görevler', 'Günün işlerini, duruşmaları ve süreleri takip edin.'],
   ['06', 'Evrak İmzalama', 'Hazırladığınız evrakı imzalama akışına alın.'],
   ['07', 'Sesli Asistan', 'Faraklit’le konuşarak işlerinizi yönetin.'],
-  ['08', 'Faraklit Ajanları', 'Tekrarlanan işleri sırayla otomatikleştirin.'],
+  ['08', 'Faraklit Ajanları', 'Tekrar eden işleri adım adım otomatikleştirin.'],
 ] as const;
 
 export function FaraklitShowcase() {
@@ -46,10 +46,10 @@ export function FaraklitShowcase() {
             <div>
               <p className="text-[13px] font-semibold uppercase tracking-[0.17em] text-[#767f88]">Faraklit Ajanları</p>
               <h3 className="mt-4 max-w-[700px] font-display text-[31px] font-semibold leading-[1.03] tracking-[-0.045em] text-[#171a20] sm:text-[43px]">
-                Bir iş gelir. Ajanlar sırayla tamamlar.
+                Bir iş gelir; ajanlar onu adım adım tamamlar.
               </h3>
             </div>
-            <p className="max-w-[420px] text-[15px] leading-6 text-[#6c747d]">UETS’ten göreve kadar örnek bir akış.</p>
+            <p className="max-w-[420px] text-[15px] leading-6 text-[#6c747d]">UETS tebligatından göreve uzanan örnek bir akış.</p>
           </div>
           <AgentSimulation />
         </div>
@@ -76,7 +76,7 @@ export function FaraklitShowcase() {
           title="Tebligattan göreve birkaç adımda geçin."
           description="Dosyayı eşleştirin, süreyi görün ve yapılacak işi oluşturun."
           demo="uets"
-          bullets={['Barkodla tekrar kaydı önler', 'Yaklaşan süreleri gösterir']}
+          bullets={['Barkod kontrolüyle mükerrer kaydı önler', 'Yaklaşan süreleri gösterir']}
         />
 
         <DocumentSigningSection />

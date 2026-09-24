@@ -20,9 +20,9 @@ export function Hero() {
           </p>
           <h1 className="mx-auto mt-5 max-w-[1020px] font-display text-[39px] font-semibold leading-[0.98] tracking-[-0.058em] text-[#17243a] min-[420px]:text-[46px] sm:text-[62px] lg:text-[82px]">
             Daha hızlı çalışın.
-            <span className="block">Daha az işi gözden kaçırın.</span>
+            <span className="block">Hiçbir işi gözden kaçırmayın.</span>
             <span className="mt-2 block font-serif text-[0.55em] font-normal italic leading-[1.04] text-[#5e6a78] sm:text-[0.5em]">
-              Faraklit, dosyayı, UETS’i, içtihadı, dilekçeyi ve günlük işi tek yerde toplar.
+              Dosya, UETS, içtihat, dilekçe ve günlük işleriniz Faraklit’te tek yerde.
             </span>
           </h1>
           <p className="mx-auto mt-6 max-w-[760px] text-[16px] leading-6 text-[#5e6670] sm:mt-7 sm:text-[18px] sm:leading-7">
@@ -80,7 +80,7 @@ export function Hero() {
               <span className="flex h-7 w-7 items-center justify-center rounded-[7px] bg-indigo-50 text-indigo-700"><Sparkles size={14} /></span>
               <div>
                 <p className="text-[14px] font-semibold uppercase tracking-[0.12em] text-indigo-700">Faraklit Asistan</p>
-                <p className="mt-0.5 text-[15px] font-semibold text-[#273448]">Dosyaya göre cevap üretir</p>
+                <p className="mt-0.5 text-[15px] font-semibold text-[#273448]">Dosyanıza özel yanıt üretir</p>
               </div>
             </div>
           </div>

@@ -9,7 +9,7 @@ export function FinalCTA() {
           <div>
             <p className="text-[13px] font-semibold uppercase tracking-[0.17em] text-white/40">Faraklit</p>
             <h2 className="mt-4 max-w-[820px] font-serif text-[36px] font-normal leading-[1.03] tracking-[-0.04em] text-white sm:text-[52px] lg:text-[58px]">
-              Hukuk büronuzun günlük işini daha sade yönetin.
+              Hukuk büronuzun günlük işlerini daha sade yönetin.
             </h2>
           </div>
           <div>

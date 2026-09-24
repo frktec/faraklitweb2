@@ -14,7 +14,7 @@ export function SecuritySection() {
             <h2 className="mt-4 max-w-[520px] font-display text-[32px] font-semibold leading-[1.03] tracking-[-0.045em] text-white sm:text-[44px]">
               Hukuki veriler için kontrollü erişim.
             </h2>
-            <p className="mt-5 max-w-[500px] text-[15px] leading-7 text-white/55">Rol bazlı erişim, güvenli aktarım ve veri minimizasyonu temel yaklaşımın parçası.</p>
+            <p className="mt-5 max-w-[500px] text-[15px] leading-7 text-white/55">Rol bazlı erişim, güvenli aktarım ve veri minimizasyonu yaklaşımımızın temelini oluşturur.</p>
           </div>
 
           <div className="border-t border-white/12">
