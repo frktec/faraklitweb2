@@ -1,3 +1,5 @@
+import { VoiceSimulation } from './VoiceSimulation';
+
 const capabilities = [
   ['01', 'Dosya Yönetimi', 'Evrak, görev, duruşma ve notları aynı dosyada yönetin; ilk derece, istinaf ve temyiz bağlantısını koruyun.'],
   ['02', 'UETS ve Süreler', 'Tebligatı dosyayla eşleştirin, son günü görün; barkod kontrolüyle mükerrer kaydı önleyin.'],
@@ -7,17 +9,6 @@ const capabilities = [
   ['06', 'Evrak İmzalama', 'Hazırladığınız evrakı imzaya gönderin, imzalı sürümü dosyada saklayın.'],
   ['07', 'Faraklit Asistan', 'Dosya, mevzuat ve içtihat birlikte taranır; yanıt tek yerde hazırlanır.'],
   ['08', 'Ekip Çalışması', 'Avukat ve personel rolleriyle büronuzu aynı sistemde yönetin.'],
-] as const;
-
-const exchanges = [
-  {
-    question: 'Bugün hangi duruşmalarım var?',
-    answer: 'Bugün 3 duruşmanız var. İlki 10.20’de Afyonkarahisar 2. İş Mahkemesinde.',
-  },
-  {
-    question: 'Yarın 10.00 için cevap dilekçesi görevi ekle.',
-    answer: 'Görev oluşturuldu: “Cevap dilekçesini hazırla”, yarın 10.00.',
-  },
 ] as const;
 
 export function ProductSection() {
@@ -62,16 +53,7 @@ export function ProductSection() {
             </p>
           </div>
 
-          <div className="divide-y divide-paper-200 border-y border-paper-200">
-            {exchanges.map((item) => (
-              <div key={item.question} className="grid gap-4 py-7 sm:grid-cols-[120px_1fr]">
-                <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8f8f8f]">Avukat</p>
-                <p className="font-serif text-[20px] italic leading-8 text-anthracite">“{item.question}”</p>
-                <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-graphite-600">Faraklit</p>
-                <p className="text-[16px] leading-7 text-[#545454]">{item.answer}</p>
-              </div>
-            ))}
-          </div>
+          <VoiceSimulation />
         </div>
       </div>
     </section>
