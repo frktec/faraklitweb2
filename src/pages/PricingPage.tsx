@@ -47,31 +47,31 @@ export function PricingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f7fb]">
+    <div className="min-h-screen bg-[#f7f7f7]">
       <Navbar />
       <main>
-        <section className="pricing-wallpaper border-b border-[#d9e1ea]">
+        <section className="pricing-wallpaper border-b border-[#e0e0e0]">
           <div className="mx-auto max-w-8xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
             <div className="mx-auto max-w-[900px] text-center">
-              <p className="section-label text-[#50647f]">Fiyatlandırma</p>
-              <h1 className="mt-5 font-display text-[40px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#14233a] sm:text-[56px] lg:text-[68px]">
+              <p className="section-label text-[#636363]">Fiyatlandırma</p>
+              <h1 className="mt-5 font-display text-[40px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#232323] sm:text-[56px] lg:text-[68px]">
                 İhtiyacınıza göre seçin,
-                <span className="block font-serif font-normal italic text-[#51677f]">ne ödeyeceğinizi baştan bilin.</span>
+                <span className="block font-serif font-normal italic text-[#656565]">ne ödeyeceğinizi baştan bilin.</span>
               </h1>
-              <p className="mx-auto mt-6 max-w-[700px] text-[17px] leading-7 text-[#5e6b79]">
+              <p className="mx-auto mt-6 max-w-[700px] text-[17px] leading-7 text-[#6a6a6a]">
                 Aylık fiyatı ve yıllık ödemedeki avantajı aynı anda görün. Yıllık lisansı seçtiğinizde 12 ay kullanır, 10 aylık liste bedeli ödersiniz.
               </p>
-              <div className="mt-7 inline-flex flex-wrap items-center justify-center gap-2 rounded-full border border-[#cbd7e3] bg-white/80 px-4 py-2.5 text-[15px] font-semibold text-[#294766] shadow-sm backdrop-blur">
+              <div className="mt-7 inline-flex flex-wrap items-center justify-center gap-2 rounded-full border border-[#d5d5d5] bg-white/80 px-4 py-2.5 text-[15px] font-semibold text-[#454545] shadow-sm backdrop-blur">
                 <Percent size={16} /> Yıllık ödemede yaklaşık %17 avantaj · 2 ay ücretsiz
               </div>
             </div>
           </div>
         </section>
 
-        <section className="border-b border-[#dce4ec] bg-[#f7f9fb]">
+        <section className="border-b border-[#e3e3e3] bg-[#f9f9f9]">
           <div className="mx-auto max-w-8xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
             {loading ? (
-              <div className="rounded-[18px] border border-[#dce4ec] bg-white py-20 text-center text-[16px] text-[#667485]">Paketler yükleniyor…</div>
+              <div className="rounded-[18px] border border-[#e3e3e3] bg-white py-20 text-center text-[16px] text-[#737373]">Paketler yükleniyor…</div>
             ) : (
               <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-6">
                 {plans.map((plan, idx) => {
@@ -92,62 +92,62 @@ export function PricingPage() {
                   return (
                     <article
                       key={plan.id}
-                      className={`relative flex h-full flex-col overflow-hidden rounded-[20px] border bg-white p-5 shadow-[0_20px_55px_rgba(25,48,77,0.06)] sm:p-7 ${
-                        featured ? 'border-[#8299b5] ring-1 ring-[#aebdce]' : 'border-[#d8e1e9]'
+                      className={`relative flex h-full flex-col overflow-hidden rounded-[20px] border bg-white p-5 shadow-[0_20px_55px_rgba(47,47,47,0.06)] sm:p-7 ${
+                        featured ? 'border-[#979797] ring-1 ring-[#bbbbbb]' : 'border-[#e0e0e0]'
                       }`}
                     >
                       {featured && (
-                        <div className="absolute right-5 top-5 rounded-full bg-[#173252] px-3 py-1.5 text-[13px] font-semibold text-white">
+                        <div className="absolute right-5 top-5 rounded-full bg-[#313131] px-3 py-1.5 text-[13px] font-semibold text-white">
                           En çok tercih edilen
                         </div>
                       )}
 
                       <div className={featured ? 'pr-28' : ''}>
-                        <p className="text-[14px] font-semibold uppercase tracking-[0.13em] text-[#718096]">{meta.idealFor}</p>
-                        <h2 className="mt-2 text-[25px] font-semibold tracking-[-0.035em] text-[#17263b]">{plan.name}</h2>
-                        <p className="mt-2 min-h-[48px] text-[16px] leading-6 text-[#657282]">{meta.description}</p>
+                        <p className="text-[14px] font-semibold uppercase tracking-[0.13em] text-[#7f7f7f]">{meta.idealFor}</p>
+                        <h2 className="mt-2 text-[25px] font-semibold tracking-[-0.035em] text-[#252525]">{plan.name}</h2>
+                        <p className="mt-2 min-h-[48px] text-[16px] leading-6 text-[#717171]">{meta.description}</p>
                       </div>
 
-                      <div className="mt-7 rounded-[14px] border border-[#e0e7ee] bg-[#f8fafc] p-4 sm:p-5">
+                      <div className="mt-7 rounded-[14px] border border-[#e6e6e6] bg-[#fafafa] p-4 sm:p-5">
                         <div className="flex flex-wrap items-end justify-between gap-3">
                           <div>
-                            <p className="text-[14px] font-semibold text-[#718096]">Aylık liste fiyatı</p>
+                            <p className="text-[14px] font-semibold text-[#7f7f7f]">Aylık liste fiyatı</p>
                             <div className="mt-1 flex items-baseline gap-1.5">
-                              <span className="text-[30px] font-semibold tracking-[-0.04em] text-[#233750]">{formatPrice(monthlyListCents)}</span>
-                              <span className="text-[15px] text-[#768392]">/ ay</span>
+                              <span className="text-[30px] font-semibold tracking-[-0.04em] text-[#363636]">{formatPrice(monthlyListCents)}</span>
+                              <span className="text-[15px] text-[#828282]">/ ay</span>
                             </div>
                           </div>
-                          <span className="rounded-full border border-[#b9d7cb] bg-[#eef8f3] px-3 py-1.5 text-[13px] font-semibold text-[#247057]">
+                          <span className="rounded-full border border-[#d0d0d0] bg-[#f6f6f6] px-3 py-1.5 text-[13px] font-semibold text-[#646464]">
                             2 ay ücretsiz
                           </span>
                         </div>
 
-                        <div className="my-4 h-px bg-[#dde5ed]" />
+                        <div className="my-4 h-px bg-[#e4e4e4]" />
 
-                        <p className="text-[14px] font-semibold text-[#52677f]">Yıllık ödeme</p>
+                        <p className="text-[14px] font-semibold text-[#656565]">Yıllık ödeme</p>
                         <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                          <span className="font-display text-[38px] font-semibold tracking-[-0.05em] text-[#12243c]">{formatPrice(plan.price_cents)}</span>
-                          <span className="text-[15px] text-[#748292]">/ yıl</span>
+                          <span className="font-display text-[38px] font-semibold tracking-[-0.05em] text-[#232323]">{formatPrice(plan.price_cents)}</span>
+                          <span className="text-[15px] text-[#808080]">/ yıl</span>
                         </div>
                         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[14px]">
-                          <span className="font-semibold text-[#2d5f82]">Aylık karşılığı {formatPrice(annualMonthlyCents)}</span>
-                          <span className="text-[#98a3ae] line-through">{formatPrice(yearlyListCents)} / yıl</span>
+                          <span className="font-semibold text-[#5b5b5b]">Aylık karşılığı {formatPrice(annualMonthlyCents)}</span>
+                          <span className="text-[#a2a2a2] line-through">{formatPrice(yearlyListCents)} / yıl</span>
                         </div>
-                        <div className="mt-3 flex flex-wrap items-center gap-2 text-[14px] font-semibold text-[#247057]">
+                        <div className="mt-3 flex flex-wrap items-center gap-2 text-[14px] font-semibold text-[#646464]">
                           <Percent size={14} /> %{discountPercent} avantaj · Yılda {formatPrice(savingsCents)} tasarruf
                         </div>
                       </div>
 
                       <div className="mt-6 space-y-3">
                         {meta.highlights.map((item) => (
-                          <div key={item} className="flex items-start gap-2.5 text-[15px] leading-5 text-[#4d5d70]">
-                            <Check size={17} className="mt-0.5 shrink-0 text-[#426b5b]" strokeWidth={2} />
+                          <div key={item} className="flex items-start gap-2.5 text-[15px] leading-5 text-[#5b5b5b]">
+                            <Check size={17} className="mt-0.5 shrink-0 text-[#636363]" strokeWidth={2} />
                             <span>{item}</span>
                           </div>
                         ))}
                       </div>
 
-                      <div className="mt-6 divide-y divide-[#e6ebf0] border-y border-[#e6ebf0]">
+                      <div className="mt-6 divide-y divide-[#eaeaea] border-y border-[#eaeaea]">
                         <InfoRow label="Kullanıcı" value={`${plan.user_limit} kişi`} />
                         <InfoRow label="Cihaz" value={`${plan.device_limit} cihaz`} />
                         <InfoRow label="Depolama" value={`${plan.storage_gb} GB`} />
@@ -159,15 +159,15 @@ export function PricingPage() {
                           onClick={() => handlePurchase(plan.id)}
                           className={`flex min-h-12 w-full items-center justify-center gap-2 rounded-[9px] px-5 text-[16px] font-semibold transition ${
                             featured
-                              ? 'bg-[#132b49] text-white hover:bg-[#0e223b]'
-                              : 'border border-[#c9d4df] bg-white text-[#203650] hover:bg-[#f4f7fa]'
+                              ? 'bg-[#2a2a2a] text-white hover:bg-[#232323]'
+                              : 'border border-[#d3d3d3] bg-white text-[#353535] hover:bg-[#f7f7f7]'
                           }`}
                         >
                           Yıllık lisansı seç <ArrowRight size={16} />
                         </button>
                         <a
                           href={`mailto:destek@faraklit.com?subject=${encodeURIComponent(`${plan.name} aylık kullanım`)}`}
-                          className="mt-3 block text-center text-[14px] font-medium text-[#677789] underline decoration-[#c5d0db] underline-offset-4 hover:text-[#233b58]"
+                          className="mt-3 block text-center text-[14px] font-medium text-[#757575] underline decoration-[#cfcfcf] underline-offset-4 hover:text-[#3a3a3a]"
                         >
                           Aylık ödeme seçeneği için bize ulaşın
                         </a>
@@ -178,16 +178,16 @@ export function PricingPage() {
               </div>
             )}
 
-            <div className="mt-8 grid gap-3 rounded-[18px] border border-[#dbe3eb] bg-white p-5 sm:grid-cols-3 sm:p-6">
+            <div className="mt-8 grid gap-3 rounded-[18px] border border-[#e2e2e2] bg-white p-5 sm:grid-cols-3 sm:p-6">
               <TrustItem Icon={CreditCard} title="Fiyatlar açık" text="Paket ücretini ve yıllık avantajı ödeme öncesinde net olarak görürsünüz." />
               <TrustItem Icon={ShieldCheck} title="Lisans doğrulaması güvenli" text="Ödeme doğrulanmadan abonelik ve lisans etkinleştirilmez." />
               <TrustItem Icon={Percent} title="Yıllıkta 2 ay avantaj" text="12 aylık kullanım için 10 aylık liste bedeli üzerinden yıllık fiyat uygulanır." />
             </div>
 
             <div className="mt-10 text-center">
-              <p className="text-[16px] text-[#667485]">
+              <p className="text-[16px] text-[#737373]">
                 Önce Faraklit’i görmek ister misiniz?{' '}
-                <Link to="/register" className="font-semibold text-[#294766] underline decoration-[#a8b7c7] underline-offset-4 hover:text-[#132b49]">
+                <Link to="/register" className="font-semibold text-[#454545] underline decoration-[#b5b5b5] underline-offset-4 hover:text-[#2a2a2a]">
                   Ücretsiz hesap oluşturun
                 </Link>
                 .
@@ -204,21 +204,21 @@ export function PricingPage() {
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-4 py-3">
-      <span className="text-[15px] text-[#6c7988]">{label}</span>
-      <span className="text-[15px] font-semibold text-[#2b3d54]">{value}</span>
+      <span className="text-[15px] text-[#787878]">{label}</span>
+      <span className="text-[15px] font-semibold text-[#3c3c3c]">{value}</span>
     </div>
   );
 }
 
 function TrustItem({ Icon, title, text }: { Icon: typeof CreditCard; title: string; text: string }) {
   return (
-    <div className="flex gap-3 rounded-[12px] bg-[#f7f9fb] p-4">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-[#eaf0f6] text-[#355573]">
+    <div className="flex gap-3 rounded-[12px] bg-[#f9f9f9] p-4">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-[#efefef] text-[#525252]">
         <Icon size={17} />
       </span>
       <div>
-        <h3 className="text-[15px] font-semibold text-[#25384f]">{title}</h3>
-        <p className="mt-1 text-[14px] leading-5 text-[#718090]">{text}</p>
+        <h3 className="text-[15px] font-semibold text-[#373737]">{title}</h3>
+        <p className="mt-1 text-[14px] leading-5 text-[#7e7e7e]">{text}</p>
       </div>
     </div>
   );

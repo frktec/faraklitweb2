@@ -516,7 +516,7 @@ export function TeamPage() {
 
   const roleIcon = (role: string) => {
     if (role === 'owner') return <Crown size={13} className="text-amber-500" />;
-    if (role === 'admin') return <Shield size={13} className="text-blue-500" />;
+    if (role === 'admin') return <Shield size={13} className="text-ink-500" />;
     if (role === 'lawyer') return <Briefcase size={13} className="text-ink-500" />;
     return <UserCog size={13} className="text-ink-400" />;
   };
@@ -533,8 +533,8 @@ export function TeamPage() {
 
         {/* Incoming join requests from org admins */}
         {myJoinRequests.length > 0 && (
-          <div className="mt-6 rounded-[8px] border border-blue-200 bg-blue-50 p-4">
-            <h2 className="mb-3 flex items-center gap-2 text-[16px] font-semibold text-blue-800">
+          <div className="mt-6 rounded-[8px] border border-ink-200 bg-ink-50 p-4">
+            <h2 className="mb-3 flex items-center gap-2 text-[16px] font-semibold text-ink-800">
               <Inbox size={15} />
               Katılma Davetleri ({myJoinRequests.length})
             </h2>
@@ -737,8 +737,8 @@ export function TeamPage() {
 
       {/* Incoming join requests for users already in an org */}
       {myJoinRequests.length > 0 && (
-        <div className="mt-6 rounded-[8px] border border-blue-200 bg-blue-50 p-4">
-          <h2 className="mb-3 flex items-center gap-2 text-[16px] font-semibold text-blue-800">
+        <div className="mt-6 rounded-[8px] border border-ink-200 bg-ink-50 p-4">
+          <h2 className="mb-3 flex items-center gap-2 text-[16px] font-semibold text-ink-800">
             <Inbox size={15} />
             Katılma Davetleri ({myJoinRequests.length})
           </h2>
@@ -822,7 +822,7 @@ export function TeamPage() {
                   </div>
                   <span className={`rounded-[5px] px-2 py-0.5 text-[13px] font-medium ${
                     searchedUser.account_type === 'organization'
-                      ? 'bg-blue-50 text-blue-700'
+                      ? 'bg-ink-50 text-ink-700'
                       : 'bg-emerald-50 text-emerald-700'
                   }`}>
                     {searchedUser.account_type === 'organization' ? 'Kurumsal' : 'Bireysel'}
@@ -929,7 +929,7 @@ export function TeamPage() {
       {pendingJoinRequests.length > 0 && isOrgAdmin && (
         <div className="mt-8">
           <h2 className="mb-3 flex items-center gap-2 text-[16px] font-semibold text-ink-700">
-            <Clock size={15} className="text-blue-500" />
+            <Clock size={15} className="text-ink-500" />
             Bekleyen Katılma Davetleri ({pendingJoinRequests.length})
           </h2>
           <div className="divide-y divide-ink-200 border-y border-ink-200">

@@ -4,8 +4,8 @@ import { Logo } from '@/components/Logo';
 
 export function NotFoundPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#f5f3ee]">
-      <header className="border-b border-[#d9d8d2] px-6 py-4"><div className="mx-auto max-w-6xl"><Logo /></div></header>
+    <div className="flex min-h-screen flex-col bg-[#f3f3f3]">
+      <header className="border-b border-[#d8d8d8] px-6 py-4"><div className="mx-auto max-w-6xl"><Logo /></div></header>
       <main className="mx-auto flex w-full max-w-6xl flex-1 items-center px-6 py-16">
         <div>
           <p className="section-label">404</p>

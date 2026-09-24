@@ -6,11 +6,11 @@ const rows = [
 
 export function SecuritySection() {
   return (
-    <section id="guvenlik" className="bg-navy text-white">
+    <section id="guvenlik" className="bg-anthracite text-white">
       <div className="mx-auto max-w-8xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
         <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
           <div>
-            <p className="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[0.24em] text-gold"><span className="gold-rule" aria-hidden="true" />Güvenlik</p>
+            <p className="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[0.24em] text-graphite"><span className="accent-rule" aria-hidden="true" />Güvenlik</p>
             <h2 className="mt-6 max-w-[480px] font-serif text-[34px] font-normal leading-[1.12] tracking-[-0.02em] text-white sm:text-[42px]">
               Hukuki veriler için kontrollü erişim.
             </h2>

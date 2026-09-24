@@ -65,7 +65,7 @@ export function Navbar() {
 
         <div className="hidden items-center gap-6 lg:flex">
           <Link to="/login" className="text-[14px] font-medium text-white/80 transition-colors hover:text-white">Giriş yap</Link>
-          <Link to="/pricing" className="rounded-[4px] bg-ivory px-5 py-2.5 text-[14px] font-semibold text-navy transition-colors hover:bg-white">Paketleri inceleyin</Link>
+          <Link to="/pricing" className="rounded-[4px] bg-paper px-5 py-2.5 text-[14px] font-semibold text-anthracite transition-colors hover:bg-white">Paketleri inceleyin</Link>
         </div>
 
         <button
@@ -80,7 +80,7 @@ export function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-white/10 bg-navy px-4 py-4 sm:px-6 lg:hidden">
+        <div className="border-t border-white/10 bg-anthracite px-4 py-4 sm:px-6 lg:hidden">
           <nav className="flex flex-col" aria-label="Mobil menü">
             {navLinks.map((link) => (
               <button
@@ -94,7 +94,7 @@ export function Navbar() {
             ))}
             <div className="mt-4 grid grid-cols-2 gap-2">
               <Link to="/login" className="rounded-[4px] border border-white/20 px-4 py-3 text-center text-[15px] font-medium text-white">Giriş yap</Link>
-              <Link to="/pricing" className="rounded-[4px] bg-ivory px-4 py-3 text-center text-[15px] font-semibold text-navy">Paketler</Link>
+              <Link to="/pricing" className="rounded-[4px] bg-paper px-4 py-3 text-center text-[15px] font-semibold text-anthracite">Paketler</Link>
             </div>
           </nav>
         </div>

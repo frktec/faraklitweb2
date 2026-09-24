@@ -13,20 +13,20 @@ function esc(value: unknown): string {
 
 const baseStyles = `
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #f4f4f4; padding: 40px; color: #0A1628; }
+  body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #f4f4f4; padding: 40px; color: #232323; }
   .doc { max-width: 640px; margin: 0 auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-  .header { background: #0A1628; color: #fff; padding: 28px 36px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .header { background: #232323; color: #fff; padding: 28px 36px; display: flex; justify-content: space-between; align-items: flex-end; }
   .header h1 { font-size: 22px; font-weight: 600; }
   .header p { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 4px; }
   .body { padding: 28px 36px; }
-  .row { display: flex; justify-content: space-between; gap: 24px; padding: 10px 0; border-bottom: 1px solid #EDF0F2; }
-  .label { font-size: 13px; color: #667085; }
+  .row { display: flex; justify-content: space-between; gap: 24px; padding: 10px 0; border-bottom: 1px solid #F0F0F0; }
+  .label { font-size: 13px; color: #707070; }
   .value { font-size: 13px; font-weight: 500; text-align: right; }
-  .total { display: flex; justify-content: space-between; padding: 18px 0 4px; margin-top: 8px; border-top: 2px solid #0A1628; }
-  .total .label { font-size: 15px; font-weight: 600; color: #0A1628; }
+  .total { display: flex; justify-content: space-between; padding: 18px 0 4px; margin-top: 8px; border-top: 2px solid #232323; }
+  .total .label { font-size: 15px; font-weight: 600; color: #232323; }
   .total .value { font-size: 20px; font-weight: 700; }
-  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #667085; margin: 20px 0 6px; }
-  .footer { padding: 20px 36px 28px; font-size: 11px; color: #8A95A3; line-height: 1.6; }
+  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #707070; margin: 20px 0 6px; }
+  .footer { padding: 20px 36px 28px; font-size: 11px; color: #949494; line-height: 1.6; }
   @media print { body { background: #fff; padding: 0; } .doc { box-shadow: none; } }
 `;
 

@@ -13,8 +13,8 @@
     font-size: 16px;
     line-height: 1.6;
     font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-    background-color: #F6F7F8;
-    color: #182336;
+    background-color: #F4F4F3;
+    color: #232426;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
   h1, h2, h3, h4, h5, h6 {
@@ -63,8 +63,8 @@ html {
 }
 
 ::selection {
-  background: rgba(11, 31, 58, 0.14);
-  color: #0b1f3a;
+  background: rgba(31,31,31, 0.14);
+  color: #232323;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -98,20 +98,20 @@ img, svg, video, canvas {
 .text-xs { font-size: 13px; line-height: 1.25rem; }
 .text-sm { font-size: 15px; line-height: 1.45rem; }
 
-/* Public site surfaces: navy, ivory and a restrained gold rule. */
+/* Public site surfaces: matte anthracite, light gray paper and a neutral rule. */
 .site-navbar {
-  background: #0b1f3a !important;
+  background: #232426 !important;
   color: #fff !important;
 }
 .harvey-paper,
 .pricing-wallpaper {
-  background: #f7f5f0;
+  background: #f4f4f3;
 }
-.gold-rule {
+.accent-rule {
   display: inline-block;
   width: 32px;
   height: 1px;
-  background: #a8844f;
+  background: #8c8d90;
 }
 
 .roadmap-progress {

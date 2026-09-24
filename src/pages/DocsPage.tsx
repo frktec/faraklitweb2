@@ -13,8 +13,8 @@ const sections = [
 
 export function DocsPage() {
   return (
-    <div className="min-h-screen bg-[#f5f3ee]">
-      <header className="border-b border-[#d9d8d2]">
+    <div className="min-h-screen bg-[#f3f3f3]">
+      <header className="border-b border-[#d8d8d8]">
         <div className="mx-auto flex h-[70px] max-w-6xl items-center justify-between px-6">
           <Logo />
           <Link to="/account/support" className="inline-flex items-center gap-2 text-[14px] font-semibold text-ink-600 hover:text-ink-950"><ArrowLeft size={14} /> Desteğe dön</Link>
@@ -25,17 +25,17 @@ export function DocsPage() {
         <h1 className="mt-4 max-w-[720px] font-serif text-[48px] font-normal leading-[1.02] tracking-[-0.045em] text-ink-950">Faraklit’i kısa sürede kullanmaya başlayın.</h1>
         <p className="mt-5 max-w-[650px] text-[16px] leading-7 text-ink-500">Bu sayfada Faraklit’in temel bölümlerini ve sık kullanılan işlemleri bulabilirsiniz. Ayrıntılı kullanım kılavuzları ürün geliştikçe buraya eklenecek.</p>
 
-        <div className="mt-12 grid gap-px overflow-hidden rounded-[14px] border border-[#d8d7d1] bg-[#d8d7d1] sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-px overflow-hidden rounded-[14px] border border-[#d7d7d7] bg-[#d7d7d7] sm:grid-cols-2 lg:grid-cols-3">
           {sections.map((section) => (
             <article key={section.title} className="bg-white p-6">
-              <section.icon size={18} className="text-[#35506f]" strokeWidth={1.7} />
+              <section.icon size={18} className="text-[#4e4e4e]" strokeWidth={1.7} />
               <h2 className="mt-5 text-[16px] font-semibold text-ink-900">{section.title}</h2>
               <p className="mt-2 text-[14px] leading-5 text-ink-500">{section.body}</p>
             </article>
           ))}
         </div>
 
-        <div className="mt-10 rounded-[14px] bg-[#10233f] p-7 text-white sm:p-9">
+        <div className="mt-10 rounded-[14px] bg-[#232323] p-7 text-white sm:p-9">
           <p className="text-[14px] font-semibold uppercase tracking-[0.15em] text-white/50">Destek</p>
           <h2 className="mt-3 font-serif text-[30px] font-normal tracking-[-0.03em]">Bir yerde takılırsanız bize ulaşın.</h2>
           <a href="mailto:destek@faraklit.com" className="mt-5 inline-flex text-[15px] font-semibold text-white underline underline-offset-4">destek@faraklit.com</a>

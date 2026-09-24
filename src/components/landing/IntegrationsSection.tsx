@@ -8,21 +8,21 @@ const integrations = [
 
 export function IntegrationsSection() {
   return (
-    <section id="entegrasyonlar" className="border-b border-ivory-200 bg-ivory">
+    <section id="entegrasyonlar" className="border-b border-paper-200 bg-paper">
       <div className="mx-auto max-w-8xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
         <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
           <div>
-            <p className="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[0.24em] text-gold-600"><span className="gold-rule" aria-hidden="true" />Entegrasyonlar</p>
-            <h2 className="mt-6 max-w-[520px] font-serif text-[34px] font-normal leading-[1.12] tracking-[-0.02em] text-navy sm:text-[42px]">
+            <p className="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[0.24em] text-graphite-600"><span className="accent-rule" aria-hidden="true" />Entegrasyonlar</p>
+            <h2 className="mt-6 max-w-[520px] font-serif text-[34px] font-normal leading-[1.12] tracking-[-0.02em] text-anthracite sm:text-[42px]">
               Kullandığınız sistemler Faraklit’te buluşsun.
             </h2>
           </div>
 
-          <div className="border-t border-ivory-300">
+          <div className="border-t border-paper-300">
             {integrations.map(([name, text]) => (
-              <div key={name} className="grid gap-2 border-b border-ivory-300 py-6 sm:grid-cols-[200px_1fr] sm:gap-8">
-                <p className="text-[16px] font-semibold text-navy">{name}</p>
-                <p className="text-[15px] leading-7 text-[#5f6977]">{text}</p>
+              <div key={name} className="grid gap-2 border-b border-paper-300 py-6 sm:grid-cols-[200px_1fr] sm:gap-8">
+                <p className="text-[16px] font-semibold text-anthracite">{name}</p>
+                <p className="text-[15px] leading-7 text-[#686868]">{text}</p>
               </div>
             ))}
           </div>
