@@ -1,84 +1,45 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
+import { Badge, BarChart, ErrorNote, Loading, Metric, MetricGrid, PageHeader, Section, ShareBars } from '@/components/ui';
 import { supabase } from '@/lib/supabase';
-import { formatPrice, formatShortDate } from '@/lib/format';
+import { fetchProfileMap, type ProfileSummary } from '@/lib/profiles';
+import { formatNumber, formatPrice, formatShortDate, daysUntil } from '@/lib/format';
+import { orderTypeLabel } from '@/lib/labels';
+import type { DashboardStats, Payment } from '@/types';
 
-type Metrics = {
-  totalUsers: number;
-  activeLicenses: number;
-  monthlyNewUsers: number;
-  totalSales: number;
-  monthlySales: number;
-  expiringLicenses: number;
-};
+type ExpiringLicense = { id: string; user_id: string; ends_at: string; plan: { name: string } | null };
+
+const monthNames = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
 
 export function AdminDashboard() {
-  const [metrics, setMetrics] = useState<Metrics>({
-    totalUsers: 0,
-    activeLicenses: 0,
-    monthlyNewUsers: 0,
-    totalSales: 0,
-    monthlySales: 0,
-    expiringLicenses: 0,
-  });
-  const [recentUsers, setRecentUsers] = useState<{ id: string; full_name: string; email: string; created_at: string }[]>([]);
-  const [recentSales, setRecentSales] = useState<{ id: string; order_number: string; amount_cents: number; created_at: string; plan_name: string; user_name: string }[]>([]);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [pending, setPending] = useState<Payment[]>([]);
+  const [expiring, setExpiring] = useState<ExpiringLicense[]>([]);
+  const [profiles, setProfiles] = useState<Record<string, ProfileSummary>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
-        const [totalUsersRes, activeLicensesRes, expiringRes, paymentsRes, recentRes] = await Promise.all([
-          supabase.from('profiles').select('*', { count: 'exact', head: true }),
-          supabase.from('licenses').select('*', { count: 'exact', head: true }).eq('status', 'active'),
-          supabase.from('licenses').select('*', { count: 'exact', head: true }).eq('status', 'active').lt('ends_at', new Date(Date.now() + 30 * 86400000).toISOString()),
-          supabase.from('payments').select('amount_cents, created_at').eq('status', 'completed'),
-          supabase.from('profiles').select('id, full_name, email, created_at').order('created_at', { ascending: false }).limit(8),
+        const [statsRes, pendingRes, expiringRes] = await Promise.all([
+          supabase.rpc('admin_dashboard_stats'),
+          supabase.from('payments').select('*, plan:plans(name)').eq('status', 'pending').order('created_at', { ascending: false }).limit(6),
+          supabase.from('licenses').select('id, user_id, ends_at, plan:plans(name)').eq('status', 'active')
+            .gt('ends_at', new Date().toISOString())
+            .lt('ends_at', new Date(Date.now() + 30 * 86400000).toISOString())
+            .order('ends_at').limit(6),
         ]);
+        if (statsRes.error || pendingRes.error || expiringRes.error) throw new Error();
 
-        if (totalUsersRes.error || activeLicensesRes.error || expiringRes.error || paymentsRes.error || recentRes.error) {
-          throw new Error();
-        }
-
-        const now = new Date();
-        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-
-        const allPayments = (paymentsRes.data as { amount_cents: number; created_at: string }[]) || [];
-        const totalSales = allPayments.reduce((sum, p) => sum + p.amount_cents, 0);
-        const monthlySales = allPayments
-          .filter((p) => new Date(p.created_at) >= monthStart)
-          .reduce((sum, p) => sum + p.amount_cents, 0);
-
-        const allUsers = (recentRes.data as { id: string; full_name: string; email: string; created_at: string }[]) || [];
-
-        setMetrics({
-          totalUsers: totalUsersRes.count || 0,
-          activeLicenses: activeLicensesRes.count || 0,
-          monthlyNewUsers: allUsers.filter((u) => new Date(u.created_at) >= monthStart).length,
-          totalSales,
-          monthlySales,
-          expiringLicenses: expiringRes.count || 0,
-        });
-        setRecentUsers(allUsers);
-
-        const { data: sales, error: salesErr } = await supabase
-          .from('payments')
-          .select('id, order_number, amount_cents, created_at, plan:plans(name), user:profiles!payments_user_id_fkey(full_name)')
-          .eq('status', 'completed')
-          .order('created_at', { ascending: false })
-          .limit(5);
-
-        if (!salesErr) {
-          setRecentSales(((sales as unknown as { id: string; order_number: string; amount_cents: number; created_at: string; plan: { name: string }; user: { full_name: string } }[]) || []).map(s => ({
-            id: s.id,
-            order_number: s.order_number,
-            amount_cents: s.amount_cents,
-            created_at: s.created_at,
-            plan_name: s.plan?.name || '—',
-            user_name: s.user?.full_name || '—',
-          })));
-        }
+        const pendingRows = (pendingRes.data as Payment[]) || [];
+        const expiringRows = (expiringRes.data as unknown as ExpiringLicense[]) || [];
+        setStats(statsRes.data as DashboardStats);
+        setPending(pendingRows);
+        setExpiring(expiringRows);
+        setProfiles(await fetchProfileMap([...pendingRows.map((p) => p.user_id), ...expiringRows.map((l) => l.user_id)]));
       } catch {
         setError(true);
       } finally {
@@ -87,84 +48,101 @@ export function AdminDashboard() {
     })();
   }, []);
 
-  if (loading) {
-    return <AdminLayout><div className="text-sm text-ink-400">Yükleniyor…</div></AdminLayout>;
-  }
-
-  if (error) {
-    return <AdminLayout>
-      <h1 className="text-[24px] font-semibold tracking-tight text-ink-950">Genel Bakış</h1>
-      <p className="mt-6 text-[16px] text-red-600">Veriler yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.</p>
-    </AdminLayout>;
+  if (loading) return <AdminLayout><Loading /></AdminLayout>;
+  if (error || !stats) {
+    return <AdminLayout><PageHeader title="Genel Bakış" /><ErrorNote /></AdminLayout>;
   }
 
   return (
     <AdminLayout>
-      <div className="mb-8">
-        <h1 className="text-[24px] font-semibold tracking-tight text-ink-950">Genel Bakış</h1>
-        <p className="mt-1 text-[16px] text-ink-500">Platform metrikleri ve son aktiviteler.</p>
-      </div>
+      <PageHeader title="Genel Bakış" description="Satış, lisans ve kullanım metrikleri." />
 
-      {/* Metrics — 2 rows of 3, refined */}
-      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[10px] border border-ink-200 bg-ink-200 lg:grid-cols-3">
-        <MetricCell label="Toplam Kullanıcı" value={metrics.totalUsers.toString()} />
-        <MetricCell label="Aktif Lisans" value={metrics.activeLicenses.toString()} />
-        <MetricCell label="Bu Ay Yeni Kullanıcı" value={metrics.monthlyNewUsers.toString()} />
-        <MetricCell label="Toplam Satış" value={formatPrice(metrics.totalSales)} />
-        <MetricCell label="Bu Ay Satış" value={formatPrice(metrics.monthlySales)} />
-        <MetricCell label="Yakında Bitecek Lisans" value={metrics.expiringLicenses.toString()} highlight={metrics.expiringLicenses > 0} />
-      </div>
+      <MetricGrid>
+        <Metric label="Bu ay gelir" value={formatPrice(stats.revenue_month)} hint={`Toplam ${formatPrice(stats.revenue_total)}`} />
+        <Metric label="Aktif lisans" value={formatNumber(stats.active_licenses)} hint={`${formatNumber(stats.total_users)} kullanıcı`} />
+        <Metric label="Bu ay yeni kullanıcı" value={formatNumber(stats.new_users_month)} />
+        <Metric
+          label="Bekleyen sipariş"
+          value={formatNumber(stats.pending_orders)}
+          hint={formatPrice(stats.pending_amount)}
+          highlight={stats.pending_orders > 0}
+        />
+        <Metric label="Bu ay üretilen iş" value={formatNumber(stats.jobs_month)} hint={`Toplam ${formatNumber(stats.jobs_total)}`} />
+        <Metric label="Bu ay harcanan kredi" value={formatNumber(stats.credits_used_month)} />
+        <Metric label="Kullanıcılardaki kredi" value={formatNumber(stats.credits_outstanding)} hint="Harcanmamış bakiye" />
+        <Metric label="30 gün içinde bitecek" value={formatNumber(stats.expiring_licenses)} highlight={stats.expiring_licenses > 0} />
+      </MetricGrid>
 
-      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
-        {/* Recent users */}
-        <div>
-          <h2 className="mb-3 text-[16px] font-semibold text-ink-900">Son Kayıt Olan Kullanıcılar</h2>
-          <div className="card divide-y divide-ink-100">
-            {recentUsers.length === 0 ? (
-              <p className="p-4 text-[15px] text-ink-400">Kullanıcı bulunmuyor.</p>
-            ) : (
-              recentUsers.map((u) => (
-                <div key={u.id} className="flex items-center justify-between px-4 py-3">
-                  <div className="min-w-0">
-                    <p className="truncate text-[15px] font-medium text-ink-800">{u.full_name || '—'}</p>
-                    <p className="truncate text-[14px] text-ink-400">{u.email}</p>
-                  </div>
-                  <span className="ml-3 shrink-0 text-[14px] text-ink-400">{formatShortDate(u.created_at)}</span>
-                </div>
-              ))
-            )}
-          </div>
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="card p-5">
+          <h2 className="text-[15px] font-semibold text-ink-900">Aylık gelir</h2>
+          <p className="mb-4 text-[13px] text-ink-400">Son 12 ay, tamamlanan ödemeler</p>
+          <BarChart
+            data={stats.revenue_by_month.map((m) => ({ label: `${monthNames[Number(m.month.slice(5)) - 1]} ${m.month.slice(2, 4)}`, value: m.amount }))}
+            format={formatPrice}
+          />
         </div>
-
-        {/* Recent sales */}
-        <div>
-          <h2 className="mb-3 text-[16px] font-semibold text-ink-900">Son Satışlar</h2>
-          <div className="card divide-y divide-ink-100">
-            {recentSales.length === 0 ? (
-              <p className="p-4 text-[15px] text-ink-400">Satış bulunmuyor.</p>
-            ) : (
-              recentSales.map((s) => (
-                <div key={s.id} className="flex items-center justify-between px-4 py-3">
-                  <div className="min-w-0">
-                    <p className="truncate text-[15px] font-medium text-ink-800">{s.user_name}</p>
-                    <p className="truncate text-[14px] text-ink-400">{s.plan_name} · {s.order_number}</p>
-                  </div>
-                  <span className="ml-3 shrink-0 text-[15px] font-medium text-ink-700">{formatPrice(s.amount_cents)}</span>
-                </div>
-              ))
-            )}
-          </div>
+        <div className="card p-5">
+          <h2 className="text-[15px] font-semibold text-ink-900">Günlük iş üretimi</h2>
+          <p className="mb-4 text-[13px] text-ink-400">Son 30 gün</p>
+          <BarChart
+            data={stats.jobs_by_day.map((d) => ({ label: `${d.day.slice(8)}.${d.day.slice(5, 7)}`, value: d.count }))}
+            format={(v) => `${formatNumber(v)} iş`}
+          />
         </div>
       </div>
+
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="card p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-[15px] font-semibold text-ink-900">İş türleri (30 gün)</h2>
+            <Link to="/admin/jobs" className="text-link text-[14px]">Tümü <ArrowRight size={13} /></Link>
+          </div>
+          <ShareBars
+            rows={stats.jobs_by_type.filter((t) => t.count > 0).slice(0, 7).map((t) => ({ label: t.label, value: t.count, sub: `${formatNumber(t.credits)} kr.` }))}
+            format={formatNumber}
+          />
+          {stats.jobs_by_type.every((t) => t.count === 0) && <p className="text-[14px] text-ink-400">Henüz iş kaydı yok.</p>}
+        </div>
+
+        <div className="card lg:col-span-2">
+          <div className="flex items-center justify-between border-b border-ink-200 px-5 py-4">
+            <h2 className="text-[15px] font-semibold text-ink-900">Ödeme bekleyen siparişler</h2>
+            <Link to="/admin/sales?status=pending" className="text-link text-[14px]">Satışlara git <ArrowRight size={13} /></Link>
+          </div>
+          <div className="divide-y divide-ink-100">
+            {pending.length === 0 ? (
+              <p className="px-5 py-6 text-[15px] text-ink-400">Bekleyen sipariş yok.</p>
+            ) : pending.map((p) => (
+              <div key={p.id} className="flex items-center justify-between gap-3 px-5 py-3">
+                <div className="min-w-0">
+                  <p className="truncate text-[15px] font-medium text-ink-800">{profiles[p.user_id]?.full_name || profiles[p.user_id]?.email || '—'}</p>
+                  <p className="truncate text-[13px] text-ink-400">
+                    {p.order_number} · {orderTypeLabel[p.order_type]}{p.plan?.name ? ` · ${p.plan.name}` : ''} · {formatShortDate(p.created_at)}
+                  </p>
+                </div>
+                <span className="shrink-0 text-[15px] font-semibold text-ink-900">{formatPrice(p.amount_cents)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <Section title="Süresi yaklaşan lisanslar" actions={<Link to="/admin/licenses" className="text-link text-[14px]">Tüm lisanslar <ArrowRight size={13} /></Link>}>
+        <div className="card divide-y divide-ink-100">
+          {expiring.length === 0 ? (
+            <p className="px-5 py-6 text-[15px] text-ink-400">Önümüzdeki 30 günde süresi dolacak lisans yok.</p>
+          ) : expiring.map((l) => (
+            <Link key={l.id} to={`/admin/users/${l.user_id}`} className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-ink-50">
+              <div className="min-w-0">
+                <p className="truncate text-[15px] font-medium text-ink-800">{profiles[l.user_id]?.full_name || profiles[l.user_id]?.email || '—'}</p>
+                <p className="text-[13px] text-ink-400">{l.plan?.name || '—'} · {formatShortDate(l.ends_at)}</p>
+              </div>
+              <Badge tone={daysUntil(l.ends_at) <= 7 ? 'red' : 'amber'}>{daysUntil(l.ends_at)} gün</Badge>
+            </Link>
+          ))}
+        </div>
+      </Section>
     </AdminLayout>
-  );
-}
-
-function MetricCell({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
-  return (
-    <div className={`bg-white p-5 ${highlight ? 'bg-amber-50' : ''}`}>
-      <p className="text-[14px] font-medium uppercase tracking-wider text-ink-400">{label}</p>
-      <p className={`mt-2 text-[22px] font-semibold tracking-tight ${highlight ? 'text-amber-700' : 'text-ink-950'}`}>{value}</p>
-    </div>
   );
 }

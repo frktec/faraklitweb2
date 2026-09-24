@@ -4,6 +4,7 @@ import { AccountLayout } from '@/components/account/AccountLayout';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth';
 import { formatDate } from '@/lib/format';
+import { effectiveLicenseStatus, licenseStatusLabel } from '@/lib/labels';
 import type { License } from '@/types';
 
 export function LicensePage() {
@@ -17,7 +18,7 @@ export function LicensePage() {
       .from('licenses')
       .select('*, plan:plans(*)')
       .eq('user_id', profile.id)
-      .order('created_at', { ascending: false })
+      .order('ends_at', { ascending: false })
       .limit(1)
       .maybeSingle()
       .then(({ data }) => {
@@ -36,7 +37,7 @@ export function LicensePage() {
         <h1 className="text-[24px] font-semibold tracking-tight text-ink-950">Lisansım</h1>
         <div className="mt-8 rounded-[10px] border border-ink-200 bg-white p-8 text-center">
           <p className="text-[16px] text-ink-500 mb-4">Aktif lisansınız bulunmuyor.</p>
-          <Link to="/pricing" className="btn-primary">Paket Satın Al</Link>
+          <Link to="/account/plan" className="btn-primary">Paket Satın Al</Link>
         </div>
       </AccountLayout>
     );
@@ -49,7 +50,7 @@ export function LicensePage() {
       <div className="mt-8">
         <div className="divide-y divide-ink-200 border-y border-ink-200">
           <Row label="Paket" value={license.plan?.name || ''} />
-          <Row label="Durum" value={license.status === 'active' ? 'Aktif' : license.status} status={license.status} />
+          <Row label="Durum" value={licenseStatusLabel[effectiveLicenseStatus(license.status, license.ends_at)!].label} status={effectiveLicenseStatus(license.status, license.ends_at)!} />
           <Row label="Başlangıç Tarihi" value={formatDate(license.started_at)} />
           <Row label="Bitiş Tarihi" value={formatDate(license.ends_at)} />
           <Row label="Kullanıcı Sayısı" value={`${license.plan?.user_limit || 1} kullanıcı`} />
@@ -60,8 +61,8 @@ export function LicensePage() {
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
-        <Link to={`/checkout?plan=${license.plan_id}`} className="btn-primary">Lisans Yenile</Link>
-        <Link to="/pricing" className="btn-secondary">Paket Yükselt</Link>
+        <Link to="/account/plan" className="btn-primary">Süreyi Uzat</Link>
+        <Link to="/account/plan" className="btn-secondary">Paket Değiştir</Link>
         <Link to="/account/billing" className="btn-secondary">Fatura Görüntüle</Link>
         <Link to="/account/devices" className="btn-secondary">Cihaz Yönet</Link>
       </div>

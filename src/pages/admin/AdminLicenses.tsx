@@ -1,96 +1,102 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Search } from 'lucide-react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
+import { Badge, ErrorNote, Loading, Metric, MetricGrid, PageHeader, Table, Td } from '@/components/ui';
 import { supabase } from '@/lib/supabase';
-import { formatShortDate } from '@/lib/format';
+import { fetchProfileMap, type ProfileSummary } from '@/lib/profiles';
+import { daysUntil, formatNumber, formatShortDate } from '@/lib/format';
+import { effectiveLicenseStatus, licenseStatusLabel } from '@/lib/labels';
+import type { License } from '@/types';
 
-type LicenseRow = {
-  id: string;
-  license_key: string;
-  status: string;
-  started_at: string;
-  ends_at: string;
-  device_count: number;
-  plan: { name: string };
-  user: { full_name: string; email: string };
-};
+type LicenseRow = Pick<License, 'id' | 'user_id' | 'license_key' | 'status' | 'started_at' | 'ends_at' | 'device_count'> & { plan: { name: string } | null };
+type Filter = 'all' | 'active' | 'expiring' | 'expired' | 'suspended';
 
 export function AdminLicenses() {
+  const navigate = useNavigate();
   const [licenses, setLicenses] = useState<LicenseRow[]>([]);
+  const [profiles, setProfiles] = useState<Record<string, ProfileSummary>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [filter, setFilter] = useState<Filter>('all');
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
-    supabase
-      .from('licenses')
-      .select('id, license_key, status, started_at, ends_at, device_count, plan:plans(name), user:profiles!licenses_user_id_fkey(full_name, email)')
-      .order('created_at', { ascending: false })
-      .then(({ data, error: err }) => {
-        if (err) {
-          setError(true);
-        } else {
-          setLicenses((data as unknown as LicenseRow[]) || []);
-        }
-        setLoading(false);
-      });
+    (async () => {
+      const { data, error: err } = await supabase
+        .from('licenses')
+        .select('id, user_id, license_key, status, started_at, ends_at, device_count, plan:plans(name)')
+        .order('ends_at', { ascending: true });
+      if (err) { setError(true); setLoading(false); return; }
+      const rows = (data as unknown as LicenseRow[]) || [];
+      setLicenses(rows);
+      setProfiles(await fetchProfileMap(rows.map((r) => r.user_id)));
+      setLoading(false);
+    })();
   }, []);
 
-  if (loading) {
-    return <AdminLayout><div className="text-sm text-ink-400">Yükleniyor…</div></AdminLayout>;
-  }
+  const rows = useMemo(() => licenses.map((l) => ({ ...l, effective: effectiveLicenseStatus(l.status, l.ends_at)!, days: daysUntil(l.ends_at) })), [licenses]);
 
-  if (error) {
-    return <AdminLayout>
-      <h1 className="text-[24px] font-semibold tracking-tight text-ink-950">Lisanslar</h1>
-      <p className="mt-6 text-[16px] text-red-600">Veriler yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.</p>
-    </AdminLayout>;
-  }
+  const filtered = useMemo(() => {
+    const q = search.trim().toLocaleLowerCase('tr');
+    return rows.filter((l) => {
+      if (filter === 'active' && l.effective !== 'active') return false;
+      if (filter === 'expiring' && !(l.effective === 'active' && l.days <= 30)) return false;
+      if (filter === 'expired' && l.effective !== 'expired') return false;
+      if (filter === 'suspended' && l.effective !== 'suspended' && l.effective !== 'cancelled') return false;
+      if (q && ![profiles[l.user_id]?.full_name, profiles[l.user_id]?.email, l.license_key, l.plan?.name].some((v) => v?.toLocaleLowerCase('tr').includes(q))) return false;
+      return true;
+    });
+  }, [rows, filter, search, profiles]);
+
+  if (loading) return <AdminLayout><Loading /></AdminLayout>;
+  if (error) return <AdminLayout><PageHeader title="Lisanslar" /><ErrorNote /></AdminLayout>;
+
+  const count = (s: string) => rows.filter((l) => l.effective === s).length;
 
   return (
     <AdminLayout>
-      <h1 className="text-[24px] font-semibold tracking-tight text-ink-950">Lisanslar</h1>
-      <p className="mt-1 text-[16px] text-ink-500">Tüm lisansların merkezi yönetimi.</p>
+      <PageHeader title="Lisanslar" description="Tüm lisanslar. Süre uzatma, askıya alma ve manuel lisans için kullanıcıya tıklayın." />
 
-      <div className="mt-8 overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-ink-200 text-left">
-              <Th>Lisans Anahtarı</Th>
-              <Th>Kullanıcı</Th>
-              <Th>Paket</Th>
-              <Th>Durum</Th>
-              <Th>Başlangıç</Th>
-              <Th>Bitiş</Th>
-              <Th>Cihaz</Th>
+      <MetricGrid>
+        <Metric label="Aktif" value={formatNumber(count('active'))} />
+        <Metric label="30 gün içinde bitecek" value={formatNumber(rows.filter((l) => l.effective === 'active' && l.days <= 30).length)} highlight />
+        <Metric label="Süresi dolmuş" value={formatNumber(count('expired'))} />
+        <Metric label="Askıda / iptal" value={formatNumber(count('suspended') + count('cancelled'))} />
+      </MetricGrid>
+
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative flex-1 sm:max-w-[320px]">
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Kullanıcı, anahtar, paket ara…" className="input-field pl-9" />
+        </div>
+        <select value={filter} onChange={(e) => setFilter(e.target.value as Filter)} className="input-field sm:w-52">
+          <option value="all">Tümü</option>
+          <option value="active">Aktif</option>
+          <option value="expiring">30 gün içinde bitecek</option>
+          <option value="expired">Süresi dolmuş</option>
+          <option value="suspended">Askıda / iptal</option>
+        </select>
+      </div>
+
+      <div className="mt-4">
+        <Table head={['Kullanıcı', 'Paket', 'Durum', 'Başlangıç', 'Bitiş', 'Kalan', 'Anahtar']} empty={filtered.length === 0}>
+          {filtered.map((l) => (
+            <tr key={l.id} onClick={() => navigate(`/admin/users/${l.user_id}`)} className="cursor-pointer hover:bg-ink-50">
+              <Td>
+                <p className="font-medium text-ink-900">{profiles[l.user_id]?.full_name || '—'}</p>
+                <p className="text-[13px] text-ink-400">{profiles[l.user_id]?.email}</p>
+              </Td>
+              <Td>{l.plan?.name || '—'}</Td>
+              <Td><Badge tone={licenseStatusLabel[l.effective].tone}>{licenseStatusLabel[l.effective].label}</Badge></Td>
+              <Td className="text-ink-500">{formatShortDate(l.started_at)}</Td>
+              <Td className="text-ink-500">{formatShortDate(l.ends_at)}</Td>
+              <Td className={l.effective === 'active' && l.days <= 30 ? 'font-medium text-amber-700' : ''}>{l.days > 0 ? `${l.days} gün` : '—'}</Td>
+              <Td mono>{l.license_key.slice(0, 12)}…</Td>
             </tr>
-          </thead>
-          <tbody className="divide-y divide-ink-100">
-            {licenses.map((l) => (
-              <tr key={l.id} className="text-[15px]">
-                <td className="py-3 pr-4 font-mono text-[14px] text-ink-700">{l.license_key.substring(0, 20)}…</td>
-                <td className="py-3 pr-4 font-medium text-ink-800">{l.user?.full_name || '—'}</td>
-                <td className="py-3 pr-4 text-ink-600">{l.plan?.name || '—'}</td>
-                <td className="py-3 pr-4">
-                  <span className={`rounded-[5px] px-2 py-0.5 text-[13px] ${
-                    l.status === 'active' ? 'bg-emerald-50 text-emerald-700' :
-                    l.status === 'suspended' ? 'bg-amber-50 text-amber-700' :
-                    l.status === 'expired' ? 'bg-red-50 text-red-700' :
-                    'bg-ink-100 text-ink-600'
-                  }`}>
-                    {l.status === 'active' ? 'Aktif' : l.status === 'suspended' ? 'Askıda' : l.status === 'expired' ? 'Süresi Dolmuş' : 'İptal'}
-                  </span>
-                </td>
-                <td className="py-3 pr-4 text-ink-500">{formatShortDate(l.started_at)}</td>
-                <td className="py-3 pr-4 text-ink-500">{formatShortDate(l.ends_at)}</td>
-                <td className="py-3 pr-4 text-ink-600">{l.device_count}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          ))}
+        </Table>
       </div>
     </AdminLayout>
   );
-}
-
-function Th({ children }: { children: React.ReactNode }) {
-  return <th className="pb-2.5 pr-4 text-[14px] font-medium uppercase tracking-wider text-ink-400">{children}</th>;
 }

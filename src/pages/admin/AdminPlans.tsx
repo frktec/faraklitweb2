@@ -10,6 +10,7 @@ export function AdminPlans() {
   const [error, setError] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
   const [editValues, setEditValues] = useState<Partial<Plan>>({});
+  const [saveError, setSaveError] = useState('');
 
   useEffect(() => {
     fetchPlans();
@@ -33,21 +34,30 @@ export function AdminPlans() {
       user_limit: plan.user_limit,
       device_limit: plan.device_limit,
       storage_gb: plan.storage_gb,
+      included_credits: plan.included_credits ?? 0,
       is_active: plan.is_active,
     });
+    setSaveError('');
   };
 
   const saveEdit = async () => {
     if (!editing) return;
-    await supabase.from('plans').update({
+    setSaveError('');
+    const { error: updateError } = await supabase.from('plans').update({
       name: editValues.name,
       price_cents: editValues.price_cents,
       user_limit: editValues.user_limit,
       device_limit: editValues.device_limit,
       storage_gb: editValues.storage_gb,
+      included_credits: editValues.included_credits,
       is_active: editValues.is_active,
       updated_at: new Date().toISOString(),
     }).eq('id', editing);
+
+    if (updateError) {
+      setSaveError('Paket kaydedilemedi: ' + updateError.message);
+      return;
+    }
 
     // Audit log
     const adminId = (await supabase.auth.getUser()).data.user?.id;
@@ -55,7 +65,7 @@ export function AdminPlans() {
       await supabase.from('admin_audit_logs').insert({
         admin_id: adminId,
         action: 'plan.updated',
-        details: `Plan ${editValues.name} updated`,
+        details: `${editValues.name}: ${formatPrice(editValues.price_cents || 0)}, ${editValues.included_credits || 0} kredi${editValues.is_active ? '' : ' (pasif)'}`,
       });
     }
 
@@ -77,7 +87,7 @@ export function AdminPlans() {
   return (
     <AdminLayout>
       <h1 className="text-[24px] font-semibold tracking-tight text-ink-950">Paketler</h1>
-      <p className="mt-1 text-[16px] text-ink-500">Paket fiyatlarını ve limitlerini yönetin.</p>
+      <p className="mt-1 text-[16px] text-ink-500">Paket fiyatlarını, limitlerini ve her dönemle birlikte verilen krediyi yönetin.</p>
 
       <div className="mt-8 space-y-4">
         {plans.map((plan) => (
@@ -90,8 +100,12 @@ export function AdminPlans() {
                     <input type="text" value={editValues.name || ''} onChange={(e) => setEditValues({ ...editValues, name: e.target.value })} className="input-field" />
                   </div>
                   <div>
-                    <label className="label-field">Fiyat (kuruş)</label>
-                    <input type="number" value={editValues.price_cents || 0} onChange={(e) => setEditValues({ ...editValues, price_cents: parseInt(e.target.value) || 0 })} className="input-field" />
+                    <label className="label-field">Fiyat (TL)</label>
+                    <input type="number" min={0} step="0.01" value={(editValues.price_cents || 0) / 100} onChange={(e) => setEditValues({ ...editValues, price_cents: Math.round((parseFloat(e.target.value) || 0) * 100) })} className="input-field" />
+                  </div>
+                  <div>
+                    <label className="label-field">Dahil kredi / dönem</label>
+                    <input type="number" min={0} value={editValues.included_credits || 0} onChange={(e) => setEditValues({ ...editValues, included_credits: Math.max(0, parseInt(e.target.value) || 0) })} className="input-field" />
                   </div>
                   <div>
                     <label className="label-field">Kullanıcı Limiti</label>
@@ -113,6 +127,7 @@ export function AdminPlans() {
                     </select>
                   </div>
                 </div>
+                {saveError && <p className="rounded-[8px] bg-red-50 px-3 py-2 text-[15px] text-red-700">{saveError}</p>}
                 <div className="flex gap-3">
                   <button onClick={saveEdit} className="btn-primary">Kaydet</button>
                   <button onClick={() => setEditing(null)} className="btn-secondary">İptal</button>
@@ -132,6 +147,7 @@ export function AdminPlans() {
                     <span>Kullanıcı: <span className="font-medium text-ink-700">{plan.user_limit}</span></span>
                     <span>Cihaz: <span className="font-medium text-ink-700">{plan.device_limit}</span></span>
                     <span>Depolama: <span className="font-medium text-ink-700">{plan.storage_gb} GB</span></span>
+                    <span>Dahil kredi: <span className="font-medium text-ink-700">{plan.included_credits ?? 0}</span></span>
                   </div>
                 </div>
                 <button onClick={() => startEdit(plan)} className="btn-secondary">Düzenle</button>

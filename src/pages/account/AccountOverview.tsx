@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, HardDrive, Package, RefreshCw, AlertCircle, CheckCircle2, ArrowUpRight } from 'lucide-react';
+import { Calendar, HardDrive, Package, RefreshCw, AlertCircle, CheckCircle2, ArrowUpRight, Coins, CalendarPlus, Repeat, Cpu } from 'lucide-react';
 import { AccountLayout } from '@/components/account/AccountLayout';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth';
-import { formatDate } from '@/lib/format';
-import type { Subscription, License, Device, Plan } from '@/types';
+import { formatDate, formatNumber } from '@/lib/format';
+import type { Subscription, License, Device, Plan, CreditWallet } from '@/types';
 
 export function AccountOverview() {
   const { profile } = useAuth();
@@ -13,6 +13,9 @@ export function AccountOverview() {
   const [license, setLicense] = useState<License | null>(null);
   const [devices, setDevices] = useState<Device[]>([]);
   const [plans, setPlans] = useState<Plan[]>([]);
+  const [wallet, setWallet] = useState<CreditWallet | null>(null);
+  const [jobsThisMonth, setJobsThisMonth] = useState(0);
+  const [pendingOrders, setPendingOrders] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,16 +27,26 @@ export function AccountOverview() {
         .from('subscriptions')
         .select('*, plan:plans(*)')
         .eq('user_id', userId)
-        .order('created_at', { ascending: false })
+        .order('ends_at', { ascending: false })
         .limit(1)
         .maybeSingle();
       setSubscription(sub as Subscription | null);
+
+      const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+      const [walletRes, jobsRes, pendingRes] = await Promise.all([
+        supabase.from('credit_wallets').select('*').eq('user_id', userId).maybeSingle(),
+        supabase.from('jobs').select('id', { count: 'exact', head: true }).eq('user_id', userId).gte('created_at', monthStart),
+        supabase.from('payments').select('id', { count: 'exact', head: true }).eq('user_id', userId).eq('status', 'pending'),
+      ]);
+      setWallet(walletRes.data as CreditWallet | null);
+      setJobsThisMonth(jobsRes.count || 0);
+      setPendingOrders(pendingRes.count || 0);
 
       const { data: lic } = await supabase
         .from('licenses')
         .select('*, plan:plans(*)')
         .eq('user_id', userId)
-        .order('created_at', { ascending: false })
+        .order('ends_at', { ascending: false })
         .limit(1)
         .maybeSingle();
       setLicense(lic as License | null);
@@ -60,7 +73,10 @@ export function AccountOverview() {
     return <AccountLayout><div className="text-sm text-ink-400">Yükleniyor…</div></AccountLayout>;
   }
 
-  const firstName = profile?.full_name?.split(' ')[0] || 'Kullanıcı';
+  // Skip professional titles such as "Av." so the greeting uses the first name.
+  const firstName = (profile?.full_name || '')
+    .split(/\s+/)
+    .find((part) => part && !/^(av|stj|dr|prof|doç|arş|gör|uzm)\.?$/i.test(part)) || 'Kullanıcı';
   const planName = subscription?.plan?.name || 'Yok';
   const deviceLimit = subscription?.plan?.device_limit || 0;
 
@@ -78,6 +94,15 @@ export function AccountOverview() {
         Merhaba, {firstName}
       </h1>
       <p className="mt-1 text-[16px] text-ink-500">Hesap bilgilerinize genel bir bakış.</p>
+
+      {pendingOrders > 0 && (
+        <div className="mt-6 flex items-center gap-2 rounded-[8px] border border-amber-200 bg-amber-50 px-3 py-2.5">
+          <AlertCircle size={15} className="shrink-0 text-amber-600" />
+          <p className="text-[14px] text-amber-800">
+            Ödemesi beklenen {pendingOrders} siparişiniz var. <Link to="/account/payments" className="font-semibold underline">Siparişlerimi gör</Link>
+          </p>
+        </div>
+      )}
 
       {/* Active subscription card */}
       {subscription ? (
@@ -122,7 +147,7 @@ export function AccountOverview() {
             {/* Feature summary */}
             <div className="mt-5 grid grid-cols-3 gap-3">
               <FeatureChip icon={HardDrive} label="Cihaz" value={`${devices.length} / ${deviceLimit}`} />
-              <FeatureChip icon={Calendar} label="Süre" value="1 yıl" />
+              <FeatureChip icon={Calendar} label="Bitiş" value={formatDate(subscription.ends_at)} />
               <FeatureChip
                 icon={RefreshCw}
                 label="Otomatik Yenile"
@@ -143,12 +168,17 @@ export function AccountOverview() {
               </div>
             )}
 
-            <div className="mt-5 flex gap-3">
-              <Link to="/account/billing" className="btn-primary flex-1 text-center">
-                {subscription.auto_renew ? 'Otomatik Yenilemeyi Yönet' : 'Paketi Yenile'}
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link to="/account/plan" className="btn-primary">
+                <CalendarPlus size={15} />
+                Süreyi Uzat
               </Link>
-              <Link to="/pricing" className="btn-secondary">
-                Paketleri Karşılaştır
+              <Link to="/account/plan" className="btn-secondary">
+                <Repeat size={15} />
+                Paket Değiştir
+              </Link>
+              <Link to="/account/billing" className="btn-secondary">
+                Otomatik Yenileme
               </Link>
             </div>
           </div>
@@ -160,7 +190,7 @@ export function AccountOverview() {
           </div>
           <p className="text-[16px] font-medium text-ink-800">Henüz aktif bir paketiniz yok</p>
           <p className="mt-1 text-[16px] text-ink-500">Hukuk büronuz için uygun paketi seçin.</p>
-          <Link to="/pricing" className="btn-primary mt-5">
+          <Link to="/account/plan" className="btn-primary mt-5">
             Paketleri İncele
             <ArrowUpRight size={15} />
           </Link>
@@ -172,27 +202,37 @@ export function AccountOverview() {
         <StatCard
           icon={CheckCircle2}
           label="Lisans Durumu"
-          value={subscription ? 'Aktif' : 'Pasif'}
-          color={subscription ? 'emerald' : 'ink'}
+          value={daysLeft > 0 ? 'Aktif' : 'Pasif'}
+          color={daysLeft > 0 ? 'emerald' : 'ink'}
         />
-        <StatCard
-          icon={HardDrive}
-          label="Cihazlar"
-          value={`${devices.length} / ${deviceLimit}`}
-          color="ink"
-        />
+        <Link to="/account/usage" className="block">
+          <StatCard
+            icon={Coins}
+            label="Kredi Bakiyesi"
+            value={formatNumber(wallet?.balance || 0)}
+            color={(wallet?.balance || 0) < 50 && subscription ? 'amber' : 'ink'}
+          />
+        </Link>
         <StatCard
           icon={Calendar}
           label="Kalan Gün"
           value={daysLeft > 0 ? `${daysLeft}` : '—'}
           color={daysLeft <= 14 && daysLeft > 0 ? 'amber' : 'ink'}
         />
-        <StatCard
-          icon={RefreshCw}
-          label="Otomatik Yenile"
-          value={subscription?.auto_renew ? 'Açık' : 'Kapalı'}
-          color={subscription?.auto_renew ? 'emerald' : 'ink'}
-        />
+        <Link to="/account/usage" className="block">
+          <StatCard icon={Cpu} label="Bu Ay Üretilen İş" value={formatNumber(jobsThisMonth)} color="ink" />
+        </Link>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-3">
+        <Link to="/account/plan" className="btn-secondary">
+          <Coins size={15} />
+          Kredi Yükle
+        </Link>
+        <Link to="/account/usage" className="btn-ghost">
+          Kullanım geçmişi
+          <ArrowUpRight size={15} />
+        </Link>
       </div>
 
       {/* License key */}

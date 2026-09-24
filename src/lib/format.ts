@@ -43,3 +43,15 @@ export function timeAgo(dateStr: string): string {
   if (minutes > 0) return `${minutes} dk önce`;
   return 'az önce';
 }
+
+export function formatNumber(value: number): string {
+  return new Intl.NumberFormat('tr-TR').format(value);
+}
+
+export function formatCredits(value: number): string {
+  return `${formatNumber(value)} kredi`;
+}
+
+export function daysUntil(dateStr: string): number {
+  return Math.ceil((new Date(dateStr).getTime() - Date.now()) / 86400000);
+}

@@ -30,7 +30,7 @@ const cases = [
 
 const researchResults = [
   { court: 'Yargıtay 3. HD', no: '2025/4182 E. · 2026/2951 K.', score: 96, text: 'İhtiyacın gerçek, samimi ve zorunlu olduğunun dava tarihinde mevcut olması ve yargılama boyunca devam etmesi gerekir.' },
-  { court: 'Yargıtay 6. HD', no: '2024/5631 E. · 2025/7740 K.', score: 91, text: 'Kiraya verenin gereksiniminin geçici nitelikte olmaması; somut olayın özellikleriyle birlikte değerlendirilmesi gerekir.' },
+  { court: 'Yargıtay 6. HD', no: '2024/5631 E. · 2025/7740 K.', score: 91, text: 'Kiraya verenin ihtiyacının geçici nitelikte olmaması gerekir; bu husus somut olayın özellikleriyle birlikte değerlendirilmelidir.' },
   { court: 'Konya BAM 3. HD', no: '2025/1914 E. · 2026/802 K.', score: 84, text: 'İhtiyaç iddiası bakımından taşınmazın kullanım amacı ve tarafların mevcut koşulları birlikte dikkate alınmalıdır.' },
 ];
 
@@ -298,7 +298,7 @@ function OverviewDemo({ dark }: { dark: boolean }) {
           <div className="mt-4 space-y-3">
             {[
               ['İstinaf cevap', '2 gün', 86],
-              ['Bilirkişi beyan', '4 gün', 63],
+              ['Rapora beyan', '4 gün', 63],
               ['Tanık listesi', '7 gün', 38],
             ].map(([label, day, width]) => (
               <div key={label as string}>
@@ -519,7 +519,7 @@ function AiDemo() {
   const answers: Record<string, string> = {
     [aiPrompts[0]]: 'Son duruşmada tanıkların dinlenmesine devam edilmesine ve eksik müzekkere cevaplarının beklenmesine karar verilmiş. Yeni duruşma 22 Eylül 2026 saat 09:30.',
     [aiPrompts[1]]: 'Evet. 17 Eylül 2026 tarihli bilirkişi raporu dosyaya eklenmiş. Rapor 14 sayfa. Ücret ve fazla mesai hesabıyla ilgili 3 temel tespit var.',
-    [aiPrompts[2]]: 'Dosyada 24 Eylül tarihli istinaf cevap süresi ile 29 Eylül tarihli bilirkişi raporuna beyan süresi görünüyor. En yakın süre 5 gün sonra doluyor.',
+    [aiPrompts[2]]: 'Dosyada iki süre görünüyor: istinaf cevap süresi 24 Eylül’de, bilirkişi raporuna beyan süresi 26 Eylül’de doluyor. En yakın süre 2 gün sonra doluyor.',
   };
 
   const ask = (next: string) => {

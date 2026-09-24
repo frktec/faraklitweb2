@@ -68,7 +68,7 @@ export function VoiceAssistantSection() {
           <p className="text-[13px] font-semibold uppercase tracking-[0.17em] text-[#727c87]">Sesli Asistan</p>
           <h2 className="mt-4 max-w-[620px] font-display text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#171a20] sm:text-[48px] lg:text-[56px]">
             Faraklit’le konuşun.
-            <span className="block font-serif font-normal italic text-[#5e6670]">İşiniz kaldığı yerden ilerlesin.</span>
+            <span className="block font-serif font-normal italic text-[#5e6670]">İşiniz kaldığı yerden devam etsin.</span>
           </h2>
           <p className="mt-5 max-w-[560px] text-[17px] leading-7 text-[#616b75]">
             Duruşmayı sorun, dosyayı özetletin, görev verin veya bir metin hazırlatın.
