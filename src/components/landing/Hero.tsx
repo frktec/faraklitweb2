@@ -13,58 +13,67 @@ const assurances = ['Rol bazlı erişim', 'KVKK odaklı veri yaklaşımı', 'Mas
 export function Hero() {
   return (
     <section className="border-b border-ivory-200 bg-ivory">
-      <div className="mx-auto grid max-w-8xl items-center gap-10 px-4 pb-14 pt-12 sm:px-6 sm:pt-16 lg:grid-cols-[1.25fr_0.75fr] lg:gap-10 lg:px-8 lg:pb-20 lg:pt-20">
-        <div>
-          <p className="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[0.24em] text-gold-600">
-            <span className="gold-rule" aria-hidden="true" />
-            Avukatlar ve hukuk büroları için
-          </p>
+      <div className="mx-auto max-w-8xl px-4 pt-12 sm:px-6 sm:pt-16 lg:px-8 lg:pt-20">
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:gap-16">
+          <div>
+            <p className="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[0.24em] text-gold-600">
+              <span className="gold-rule" aria-hidden="true" />
+              Avukatlar ve hukuk büroları için
+            </p>
 
-          <h1 className="mt-7 max-w-[760px] font-serif text-[40px] font-normal leading-[1.06] tracking-[-0.02em] text-navy min-[420px]:text-[46px] sm:text-[58px] xl:text-[66px]">
-            Hukuk büronuzun işleri,
-            <span className="block italic text-navy-700">tek bir düzende.</span>
-          </h1>
-
-          <p className="mt-7 max-w-[560px] text-[17px] leading-8 text-[#4a5566] sm:text-[18px]">
-            Faraklit; dosyaları, UETS tebligatlarını, süreleri, içtihat araştırmasını ve dilekçeleri
-            ekibinizle birlikte kullandığınız güvenli bir çalışma alanında bir araya getirir.
-          </p>
-
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Link
-              to="/pricing"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[4px] bg-navy px-7 text-[15px] font-semibold text-white transition-colors hover:bg-navy-800"
-            >
-              Paketleri inceleyin
-              <ArrowRight size={16} />
-            </Link>
-            <Link
-              to="/register"
-              className="inline-flex min-h-12 items-center justify-center rounded-[4px] border border-navy/25 px-7 text-[15px] font-semibold text-navy transition-colors hover:border-navy/50 hover:bg-white"
-            >
-              Hesap oluşturun
-            </Link>
+            <h1 className="mt-7 max-w-[720px] font-serif text-[40px] font-normal leading-[1.06] tracking-[-0.02em] text-navy min-[420px]:text-[46px] sm:text-[58px] xl:text-[66px]">
+              Hukuk büronuzun işleri,
+              <span className="block italic text-navy-700">tek bir düzende.</span>
+            </h1>
           </div>
 
-          <ul className="mt-12 flex flex-wrap gap-x-8 gap-y-3 border-t border-ivory-300 pt-6">
-            {assurances.map((item) => (
-              <li key={item} className="flex items-center gap-2.5 text-[14px] text-[#5a6473]">
-                <span className="h-1 w-1 rotate-45 bg-gold" aria-hidden="true" />
-                {item}
-              </li>
-            ))}
-          </ul>
+          <div className="lg:pb-2">
+            <p className="max-w-[520px] text-[17px] leading-8 text-[#4a5566]">
+              Faraklit; dosyaları, UETS tebligatlarını, süreleri, içtihat araştırmasını ve dilekçeleri
+              ekibinizle birlikte kullandığınız güvenli bir çalışma alanında bir araya getirir.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Link
+                to="/pricing"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[4px] bg-navy px-7 text-[15px] font-semibold text-white transition-colors hover:bg-navy-800"
+              >
+                Paketleri inceleyin
+                <ArrowRight size={16} />
+              </Link>
+              <Link
+                to="/register"
+                className="inline-flex min-h-12 items-center justify-center rounded-[4px] border border-navy/25 px-7 text-[15px] font-semibold text-navy transition-colors hover:border-navy/50 hover:bg-white"
+              >
+                Hesap oluşturun
+              </Link>
+            </div>
+          </div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-[520px] lg:max-w-none">
-          <img
-            src="/assets/images/faraklit-adliye.webp"
-            alt="Klasik sütunlu adliye binası"
-            width={904}
-            height={1064}
-            className="mx-auto h-auto w-full max-w-[500px] mix-blend-multiply"
-          />
-        </div>
+        <ul className="mt-12 flex flex-wrap gap-x-8 gap-y-3 border-t border-ivory-300 pt-6">
+          {assurances.map((item) => (
+            <li key={item} className="flex items-center gap-2.5 text-[14px] text-[#5a6473]">
+              <span className="h-1 w-1 rotate-45 bg-gold" aria-hidden="true" />
+              {item}
+            </li>
+          ))}
+        </ul>
+
+        <figure className="mt-12 pb-14 lg:mt-16 lg:pb-20">
+          <div className="rounded-[8px] border border-ivory-300 bg-white p-1.5 shadow-[0_40px_90px_-40px_rgba(11,31,58,0.35)] sm:p-2">
+            <img
+              src="/assets/images/faraklit-genel-bakis.webp"
+              alt="Faraklit masaüstü uygulamasının Genel Bakış ekranı: bugünkü duruşmalar ve öncelikli işler"
+              width={1800}
+              height={1018}
+              className="h-auto w-full rounded-[5px]"
+            />
+          </div>
+          <figcaption className="mt-4 text-center text-[13px] text-[#7a8290]">
+            Faraklit masaüstü · Genel Bakış ekranı, örnek verilerle
+          </figcaption>
+        </figure>
       </div>
 
       <div className="border-t border-ivory-200 bg-white">
