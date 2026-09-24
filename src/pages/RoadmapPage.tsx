@@ -93,7 +93,7 @@ export function RoadmapPage() {
                 <h2 className="mt-3 font-display text-[32px] font-semibold tracking-[-0.045em] text-[#1c2d43] sm:text-[44px]">Neyi, hangi sırayla geliştiriyoruz?</h2>
               </div>
               <div className="flex items-center gap-2 text-[14px] font-semibold text-emerald-700">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 live-demo-pulse" /> Güncel ürün rotası
+                <span className="h-2 w-2 rounded-full bg-emerald-500" /> Güncel ürün rotası
               </div>
             </div>
 
@@ -167,7 +167,7 @@ export function RoadmapPage() {
                     <p className="text-[15px] font-semibold text-[#2c4058]">Mobil geliştirme akışı</p>
                     <p className="text-[13px] text-[#7d8996]">Aşamalar sırayla canlandırılır</p>
                   </div>
-                  <span className="flex items-center gap-1.5 text-[13px] font-semibold text-emerald-700"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500 live-demo-pulse" /> canlı</span>
+                  <span className="flex items-center gap-1.5 text-[13px] font-semibold text-emerald-700"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> canlı</span>
                 </div>
                 <div className="p-4 sm:p-5">
                   <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_220px] md:items-center">
@@ -186,7 +186,7 @@ export function RoadmapPage() {
                             <p className="text-[15px] font-semibold text-[#31455d]">{stage.title}</p>
                             <p className="mt-0.5 text-[13px] leading-5 text-[#7a8794]">{stage.detail}</p>
                           </div>
-                          <span className={`h-2 w-2 rounded-full ${index === mobileActive ? 'bg-cyan-500 live-demo-pulse' : index < mobileActive ? 'bg-emerald-500' : 'bg-[#cbd4dc]'}`} />
+                          <span className={`h-2 w-2 rounded-full ${index === mobileActive ? 'bg-cyan-500' : index < mobileActive ? 'bg-emerald-500' : 'bg-[#cbd4dc]'}`} />
                         </button>
                       ))}
                     </div>
@@ -197,7 +197,7 @@ export function RoadmapPage() {
                         <div className="p-3.5">
                           <div className="flex items-center justify-between">
                             <span className="text-[11px] font-semibold text-[#2f455d]">Faraklit Mobil</span>
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 live-demo-pulse" />
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                           </div>
                           <div className="mt-7 flex h-11 w-11 items-center justify-center rounded-[12px] bg-[#173252] text-white">
                             <ActiveMobileIcon size={20} />

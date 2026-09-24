@@ -1,7 +1,6 @@
 import { Navbar } from '@/components/landing/Navbar';
 import { Hero } from '@/components/landing/Hero';
-import { FaraklitShowcase } from '@/components/landing/FaraklitShowcase';
-import { VoiceAssistantSection } from '@/components/landing/VoiceAssistantSection';
+import { ProductSection } from '@/components/landing/ProductSection';
 import { IntegrationsSection } from '@/components/landing/IntegrationsSection';
 import { SecuritySection } from '@/components/landing/SecuritySection';
 import { FounderStatement } from '@/components/landing/FounderStatement';
@@ -11,12 +10,11 @@ import { Footer } from '@/components/landing/Footer';
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#f8fafc]">
+    <div className="min-h-screen bg-ivory">
       <Navbar />
       <main>
         <Hero />
-        <VoiceAssistantSection />
-        <FaraklitShowcase />
+        <ProductSection />
         <IntegrationsSection />
         <SecuritySection />
         <FounderStatement />

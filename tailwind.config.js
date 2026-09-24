@@ -4,6 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Public site palette: navy, ivory paper and a restrained gold accent.
+        navy: { DEFAULT: '#0B1F3A', 700: '#1C3558', 800: '#132B4D', 900: '#0B1F3A' },
+        ivory: { DEFAULT: '#F7F5F0', 200: '#E6E1D6', 300: '#D8D1C2' },
+        gold: { DEFAULT: '#A8844F', 600: '#8C6C3E' },
         ink: {
           50: '#F6F7F8',
           100: '#EDF0F2',
@@ -32,6 +36,7 @@ export default {
       },
       fontFamily: {
         sans: ['Manrope', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['"Source Serif 4"', 'Georgia', '"Times New Roman"', 'serif'],
       },
       maxWidth: {
         '8xl': '1280px',
