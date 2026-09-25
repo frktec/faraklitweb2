@@ -41,15 +41,15 @@ export function FounderStatement() {
             </div>
           </blockquote>
 
-          <figcaption className="mt-12 flex flex-col items-center">
-            <div aria-label="Av. Furkan Tunca imzası" className="h-[70px] w-[230px] overflow-hidden sm:h-[80px] sm:w-[262px]">
-              <img
-                src="/assets/images/founder-signature.png"
-                alt="Av. Furkan Tunca imzası"
-                className="h-auto w-full -translate-y-[1px] mix-blend-multiply"
-              />
-            </div>
-            <p className="mt-4 text-[16px] font-semibold tracking-[0.01em] text-anthracite">Av. Furkan Tunca</p>
+          <figcaption className="mt-12 flex justify-center">
+            <img
+              src="/assets/images/founder-signature-card.png"
+              alt="Avukat Furkan Tunca, imza"
+              width={1200}
+              height={436}
+              loading="lazy"
+              className="h-auto w-[290px] sm:w-[380px]"
+            />
           </figcaption>
         </figure>
       </div>
