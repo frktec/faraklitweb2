@@ -4,7 +4,7 @@ export function Logo({ className = '', onClick, onDark = false }: { className?: 
   return (
     <Link to="/" onClick={onClick} className={`inline-flex items-center ${className}`}>
       <img
-        src={onDark ? '/assets/logos/faraklit-wordmark-white.png' : '/assets/logos/faraklit-wordmark-navy.png'}
+        src={onDark ? '/assets/logos/faraklit-wordmark-white.png' : '/assets/logos/faraklit-wordmark-dark.png'}
         alt="Faraklit"
         className="h-auto w-[112px]"
       />

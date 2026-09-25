@@ -47,6 +47,8 @@ export function effectiveLicenseStatus(status: License['status'] | null, endsAt:
 }
 
 const rpcErrors: Record<string, string> = {
+  pos_keys_missing: 'Bu mod için API anahtarları kayıtlı değil. Önce anahtarları girin.',
+  pos_disabled: 'Varsayılan yapmak için önce POS’u açın.',
   insufficient_credits: 'Kredi bakiyesi yetersiz.',
   no_active_license: 'Aktif lisans bulunamadı.',
   use_renewal_or_plan_change: 'Zaten aktif bir paketiniz var. Süre uzatma veya paket değişikliği seçin.',

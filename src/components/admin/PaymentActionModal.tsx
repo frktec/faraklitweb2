@@ -77,6 +77,9 @@ export function PaymentActionModal({ payment, action, onClose, onDone }: {
               <option value="kredi-karti">Kredi kartı</option>
               <option value="iyzico">iyzico</option>
               <option value="paytr">PayTR</option>
+              <option value="param">Param</option>
+              <option value="sipay">Sipay</option>
+              <option value="garanti">Garanti BBVA Sanal POS</option>
               <option value="manuel">Diğer</option>
             </select>
           </div>

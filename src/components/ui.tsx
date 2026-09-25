@@ -107,12 +107,12 @@ export function Modal({ title, onClose, children, footer }: { title: string; onC
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-4" onClick={onClose}>
-      <div role="dialog" aria-modal="true" className="w-full max-w-[460px] rounded-[12px] border border-ink-200 bg-white" onClick={(e) => e.stopPropagation()}>
+      <div role="dialog" aria-modal="true" className="flex max-h-[calc(100vh-2rem)] w-full max-w-[460px] flex-col rounded-[12px] border border-ink-200 bg-white" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-ink-200 px-5 py-4">
           <h3 className="text-[16px] font-semibold text-ink-950">{title}</h3>
           <button onClick={onClose} className="text-ink-400 hover:text-ink-700" aria-label="Kapat"><X size={18} /></button>
         </div>
-        <div className="space-y-4 px-5 py-4">{children}</div>
+        <div className="space-y-4 overflow-y-auto px-5 py-4">{children}</div>
         {footer && <div className="flex justify-end gap-3 border-t border-ink-200 px-5 py-4">{footer}</div>}
       </div>
     </div>

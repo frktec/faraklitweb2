@@ -137,8 +137,8 @@ export function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f3ee]">
-      <div className="border-b border-[#d9d8d2] bg-[#f5f3ee]">
+    <div className="min-h-screen bg-[#f3f3f3]">
+      <div className="border-b border-[#d8d8d8] bg-[#f3f3f3]">
         <div className="mx-auto flex max-w-8xl items-center justify-between px-6 py-4">
           <Logo />
           <Link to={session ? '/account/plan' : '/pricing'} className="text-link">
@@ -158,7 +158,7 @@ export function CheckoutPage() {
         </div>
 
         {orderType !== requestedType && (
-          <div className="mb-6 flex max-w-[720px] gap-3 rounded-[12px] border border-[#d7d6d0] bg-white p-4">
+          <div className="mb-6 flex max-w-[720px] gap-3 rounded-[12px] border border-[#d6d6d6] bg-white p-4">
             <Info size={18} className="mt-0.5 shrink-0 text-ink-500" />
             <p className="text-[14px] leading-5 text-ink-600">
               {orderType === 'renewal'
@@ -173,7 +173,7 @@ export function CheckoutPage() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[0.88fr_1.12fr]">
           <div>
             <h2 className="mb-4 text-[16px] font-semibold uppercase tracking-[0.12em] text-ink-500">Sipariş özeti</h2>
-            <div className="overflow-hidden rounded-[14px] border border-[#d7d6d0] bg-white">
+            <div className="overflow-hidden rounded-[14px] border border-[#d6d6d6] bg-white">
               {orderType === 'credits' ? (
                 <>
                   <OrderRow label="Kredi paketi" value={creditPackage?.name || '—'} />
@@ -209,9 +209,9 @@ export function CheckoutPage() {
               </div>
             </div>
 
-            <div className="mt-5 rounded-[12px] border border-[#d7d6d0] bg-white p-4">
+            <div className="mt-5 rounded-[12px] border border-[#d6d6d6] bg-white p-4">
               <div className="flex gap-3">
-                <ShieldCheck size={18} className="mt-0.5 shrink-0 text-[#4d6d5d]" />
+                <ShieldCheck size={18} className="mt-0.5 shrink-0 text-[#666666]" />
                 <p className="text-[14px] leading-5 text-ink-500">
                   Ödeme doğrulanmadan lisans veya kredi tanımlanmaz. Sipariş, abonelik ve lisans kayıtları ayrı güvenlik katmanlarında tutulur.
                 </p>
@@ -221,7 +221,7 @@ export function CheckoutPage() {
 
           <div>
             <h2 className="mb-4 text-[16px] font-semibold uppercase tracking-[0.12em] text-ink-500">Fatura bilgileri</h2>
-            <form onSubmit={handleCheckout} className="rounded-[14px] border border-[#d7d6d0] bg-white p-5 sm:p-6">
+            <form onSubmit={handleCheckout} className="rounded-[14px] border border-[#d6d6d6] bg-white p-5 sm:p-6">
               <div className="space-y-4">
                 <Field label="Ad Soyad / Firma unvanı" required value={billing.name} onChange={(v) => setBilling({ ...billing, name: v })} />
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -236,7 +236,7 @@ export function CheckoutPage() {
                 <Field label="Fatura e-postası" type="email" required value={billing.email} onChange={(v) => setBilling({ ...billing, email: v })} />
               </div>
 
-              <div className="mt-5 rounded-[10px] border border-[#d8d7d1] bg-[#f8f7f3] p-4">
+              <div className="mt-5 rounded-[10px] border border-[#d7d7d7] bg-[#f7f7f7] p-4">
                 <div className="flex items-start gap-3">
                   <Clock3 size={17} className="mt-0.5 shrink-0 text-ink-500" />
                   <div>
@@ -290,14 +290,14 @@ function PendingOrderView({ order, title }: { order: CreatedOrder; title: string
   const navigate = useNavigate();
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f5f3ee]">
-      <div className="border-b border-[#d9d8d2]">
+    <div className="flex min-h-screen flex-col bg-[#f3f3f3]">
+      <div className="border-b border-[#d8d8d8]">
         <div className="mx-auto max-w-8xl px-6 py-4"><Logo /></div>
       </div>
       <div className="flex flex-1 items-center justify-center px-6 py-14">
-        <div className="w-full max-w-[520px] rounded-[18px] border border-[#d7d6d0] bg-white p-7 shadow-[0_20px_60px_rgba(24,35,54,0.08)] sm:p-9">
-          <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-full bg-[#edf3ef]">
-            <Check size={22} className="text-[#4f725f]" />
+        <div className="w-full max-w-[520px] rounded-[18px] border border-[#d6d6d6] bg-white p-7 shadow-[0_20px_60px_rgba(35,35,35,0.08)] sm:p-9">
+          <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-full bg-[#f1f1f1]">
+            <Check size={22} className="text-[#6a6a6a]" />
           </div>
           <p className="section-label">Sipariş alındı</p>
           <h1 className="mt-3 font-serif text-[34px] font-normal tracking-[-0.035em] text-ink-950">Ödeme onayı bekleniyor.</h1>

@@ -6,6 +6,7 @@ import {
   Receipt,
   FileText,
   Coins,
+  CreditCard,
   Cpu,
   Activity,
   BarChart3,
@@ -40,6 +41,7 @@ const navGroups: { title: string; items: NavItem[] }[] = [
     items: [
       { label: 'Satışlar', href: '/admin/sales', icon: Receipt },
       { label: 'Faturalar', href: '/admin/invoices', icon: FileText },
+      { label: 'POS Entegrasyonları', href: '/admin/pos', icon: CreditCard },
     ],
   },
   {

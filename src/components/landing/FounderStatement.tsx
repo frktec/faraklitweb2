@@ -1,27 +1,57 @@
+const closingLines = [
+  'Avukatlık dijitalleşecek.',
+  'Meslek dönüşecek.',
+  'Fakat adaletin, savunmanın ve avukatlığın taşıdığı değer daima korunacak.',
+];
+
 export function FounderStatement() {
   return (
-    <section className="border-b border-[#dce4ec] bg-[#f4f7fa]">
-      <div className="mx-auto max-w-8xl px-4 py-14 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
-        <blockquote className="max-w-[1080px] font-serif text-[22px] font-normal italic leading-[1.22] tracking-[-0.03em] text-[#263a58] min-[420px]:text-[24px] sm:text-[32px] lg:text-[40px]">
-          <p>“Faraklit, yalnızca bir hukuk teknolojisi değil; avukatlık mesleğinin dijital çağdaki yeni çalışma biçimidir.</p>
-          <p className="mt-3">İlhamımızı, savunuculuğun ve yol göstericiliğin kadim anlamını taşıyan Parakletos kavramından aldık. Çünkü çağlar değişse de savunmanın özü değişmez.</p>
-          <p className="mt-3">Avukatlık dijitalleşecek.<br />Meslek dönüşecek.<br />Fakat adaletin, savunmanın ve avukatlığın taşıdığı değer daima korunacak.”</p>
-        </blockquote>
+    <section className="border-b border-anthracite/10">
+      <div className="mx-auto max-w-[1000px] px-4 py-24 sm:px-6 lg:py-32">
+        <figure className="relative rounded-[28px] border border-anthracite/10 bg-white/70 px-6 pb-14 pt-16 text-center shadow-[0_60px_140px_-70px_rgba(35,36,38,0.35)] sm:px-14 sm:pt-20 lg:px-20">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[#7a7a7a]">Kurucumuzdan</p>
 
-        <div className="mt-8 flex flex-col gap-6 sm:mt-12 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
-          <div className="text-[16px] leading-relaxed text-[#263a58]">
-            <p className="font-medium">Av. Furkan Tunca</p>
-            <p>Kurucu</p>
-          </div>
+          <span aria-hidden="true" className="mt-6 block font-serif text-[96px] leading-[0.6] text-anthracite/15 sm:text-[120px]">“</span>
 
-          <div aria-label="Av. Furkan Tunca imzası" className="h-[64px] w-[205px] overflow-hidden sm:h-[72px] sm:w-[240px]">
+          <blockquote className="mt-4">
+            <p className="mx-auto max-w-[760px] font-serif text-[26px] font-normal leading-[1.28] tracking-[-0.015em] text-anthracite sm:text-[34px] lg:text-[38px]">
+              Faraklit, yalnızca bir hukuk teknolojisi değil; avukatlık mesleğinin dijital çağdaki yeni çalışma biçimidir.
+            </p>
+
+            <span aria-hidden="true" className="mx-auto mt-10 block h-px w-16 bg-anthracite/20" />
+
+            <p className="mx-auto mt-10 max-w-[640px] font-serif text-[18px] italic leading-[1.7] text-[#4f4f4f] sm:text-[20px]">
+              İlhamımızı, savunuculuğun ve yol göstericiliğin kadim anlamını taşıyan Parakletos kavramından aldık.
+              Çünkü çağlar değişse de savunmanın özü değişmez.
+            </p>
+
+            <div className="mx-auto mt-12 max-w-[620px] divide-y divide-anthracite/10 border-y border-anthracite/10">
+              {closingLines.map((line, index) => (
+                <p
+                  key={line}
+                  className={`py-4 font-serif leading-snug ${
+                    index === closingLines.length - 1
+                      ? 'text-[20px] text-anthracite sm:text-[23px]'
+                      : 'text-[20px] italic text-[#5a5a5a] sm:text-[23px]'
+                  }`}
+                >
+                  {line}
+                </p>
+              ))}
+            </div>
+          </blockquote>
+
+          <figcaption className="mt-12 flex justify-center">
             <img
-              src="/assets/images/founder-signature.png"
-              alt="Av. Furkan Tunca imzası"
-              className="h-auto w-full -translate-y-[1px] mix-blend-multiply"
+              src="/assets/images/founder-signature-card.png"
+              alt="Avukat Furkan Tunca, imza"
+              width={1200}
+              height={436}
+              loading="lazy"
+              className="h-auto w-[290px] sm:w-[380px]"
             />
-          </div>
-        </div>
+          </figcaption>
+        </figure>
       </div>
     </section>
   );

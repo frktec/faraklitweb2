@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Instagram, Menu, X } from 'lucide-react';
+import { INSTAGRAM_URL } from '@/lib/contact';
 import { Logo } from '@/components/Logo';
 
 const navLinks = [
   { label: 'Ürün', href: '/#urun' },
-  { label: 'Çözümler', href: '/#cozumler' },
+  { label: 'Neden Faraklit', href: '/#fark' },
   { label: 'Entegrasyonlar', href: '/#entegrasyonlar' },
   { label: 'Güvenlik', href: '/#guvenlik' },
-  { label: 'Geliştirme Rotası', href: '/roadmap' },
+  { label: 'Yol Haritası', href: '/roadmap' },
   { label: 'Fiyatlandırma', href: '/pricing' },
 ];
 
@@ -45,21 +46,20 @@ export function Navbar() {
 
   return (
     <header
-      className={`site-navbar sticky top-0 z-[100] w-full border-b border-white/8 transition-shadow duration-200 ${
-        scrolled ? 'shadow-[0_16px_40px_rgba(15,18,24,0.24)]' : ''
+      className={`sticky top-0 z-[100] w-full border-b transition-colors duration-300 ${
+        scrolled || mobileOpen ? 'border-anthracite/10 bg-white/75 backdrop-blur-md' : 'border-transparent bg-transparent'
       }`}
-      style={{ backgroundColor: '#15181d', color: '#ffffff' }}
     >
-      <div className="mx-auto flex h-[64px] max-w-8xl items-center justify-between px-4 sm:h-[72px] sm:px-6 lg:px-8">
-        <div className="flex min-w-0 items-center gap-9">
-          <Logo className="shrink-0" onDark />
-          <nav className="hidden items-center gap-5 xl:flex 2xl:gap-7" aria-label="Ana menü">
+      <div className="mx-auto flex h-[64px] max-w-8xl items-center justify-between px-4 sm:h-[76px] sm:px-6 lg:px-8">
+        <div className="flex min-w-0 items-center gap-12">
+          <Logo className="shrink-0" />
+          <nav className="hidden items-center gap-8 xl:flex" aria-label="Ana menü">
             {navLinks.map((link) => (
               <button
                 key={link.label}
                 type="button"
                 onClick={() => handleNavClick(link.href)}
-                className="whitespace-nowrap text-[15px] font-semibold text-white/74 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                className="whitespace-nowrap text-[14px] font-medium tracking-[0.02em] text-anthracite/65 transition-colors hover:text-anthracite focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-anthracite/40"
               >
                 {link.label}
               </button>
@@ -67,14 +67,14 @@ export function Navbar() {
           </nav>
         </div>
 
-        <div className="hidden items-center gap-2 xl:flex">
-          <Link to="/login" className="rounded-[8px] px-4 py-2.5 text-[15px] font-semibold text-white/78 transition hover:bg-white/7 hover:text-white">Giriş yap</Link>
-          <Link to="/pricing" className="rounded-[8px] border border-white/10 bg-white px-4 py-2.5 text-[15px] font-semibold text-[#171a20] transition hover:bg-[#f2f4f7]">Fiyatları incele</Link>
+        <div className="hidden items-center gap-6 xl:flex">
+          <Link to="/login" className="whitespace-nowrap text-[14px] font-medium text-anthracite/75 transition-colors hover:text-anthracite">Giriş yap</Link>
+          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-anthracite px-5 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-black"><Instagram size={15} />İletişime geçin</a>
         </div>
 
         <button
           type="button"
-          className="flex h-11 w-11 items-center justify-center rounded-[8px] border border-white/10 text-white xl:hidden hover:bg-white/10"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-anthracite/15 text-anthracite hover:bg-white/60 xl:hidden"
           onClick={() => setMobileOpen((value) => !value)}
           aria-label={mobileOpen ? 'Menüyü kapat' : 'Menüyü aç'}
           aria-expanded={mobileOpen}
@@ -84,21 +84,21 @@ export function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-white/8 bg-[#15181d] px-4 py-4 sm:px-6 xl:hidden">
+        <div className="border-t border-anthracite/10 px-4 py-4 sm:px-6 xl:hidden">
           <nav className="flex flex-col" aria-label="Mobil menü">
             {navLinks.map((link) => (
               <button
                 key={link.label}
                 type="button"
                 onClick={() => handleNavClick(link.href)}
-                className="border-b border-white/10 py-3.5 text-left text-[16px] font-semibold text-white/80"
+                className="border-b border-anthracite/10 py-3.5 text-left text-[16px] font-medium text-anthracite/80"
               >
                 {link.label}
               </button>
             ))}
             <div className="mt-4 grid grid-cols-2 gap-2">
-              <Link to="/login" className="rounded-[8px] border border-white/15 bg-white/5 px-4 py-3 text-center text-[15px] font-semibold text-white">Giriş yap</Link>
-              <Link to="/pricing" className="rounded-[8px] bg-white px-4 py-3 text-center text-[15px] font-semibold text-[#171a20]">Fiyatlar</Link>
+              <Link to="/login" className="rounded-full border border-anthracite/20 px-4 py-3 text-center text-[15px] font-medium text-anthracite">Giriş yap</Link>
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="rounded-full bg-anthracite px-4 py-3 text-center text-[15px] font-medium text-white">İletişime geçin</a>
             </div>
           </nav>
         </div>

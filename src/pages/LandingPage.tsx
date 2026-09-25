@@ -1,22 +1,24 @@
 import { Navbar } from '@/components/landing/Navbar';
 import { Hero } from '@/components/landing/Hero';
-import { FaraklitShowcase } from '@/components/landing/FaraklitShowcase';
-import { VoiceAssistantSection } from '@/components/landing/VoiceAssistantSection';
+import { ProductSection } from '@/components/landing/ProductSection';
+import { ComparisonSection } from '@/components/landing/ComparisonSection';
 import { IntegrationsSection } from '@/components/landing/IntegrationsSection';
 import { SecuritySection } from '@/components/landing/SecuritySection';
 import { FounderStatement } from '@/components/landing/FounderStatement';
 import { PlansSection } from '@/components/landing/PlansSection';
 import { FinalCTA } from '@/components/landing/FinalCTA';
 import { Footer } from '@/components/landing/Footer';
+import { LiveWallpaper } from '@/components/landing/LiveWallpaper';
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#f8fafc]">
+    <div className="relative isolate min-h-screen">
+      <LiveWallpaper />
       <Navbar />
       <main>
         <Hero />
-        <VoiceAssistantSection />
-        <FaraklitShowcase />
+        <ProductSection />
+        <ComparisonSection />
         <IntegrationsSection />
         <SecuritySection />
         <FounderStatement />

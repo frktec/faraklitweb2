@@ -1,22 +1,28 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { Instagram } from 'lucide-react';
+import { INSTAGRAM_URL } from '@/lib/contact';
 
 export function FinalCTA() {
   return (
-    <section className="bg-[#171a20] px-4 py-14 text-white sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-      <div className="mx-auto max-w-8xl">
+    <section className="bg-anthracite/95 py-24 text-white lg:py-28">
+      <div className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-end gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:gap-20">
           <div>
-            <p className="text-[13px] font-semibold uppercase tracking-[0.17em] text-white/40">Faraklit</p>
-            <h2 className="mt-4 max-w-[820px] font-serif text-[36px] font-normal leading-[1.03] tracking-[-0.04em] text-white sm:text-[52px] lg:text-[58px]">
+            <p className="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[0.24em] text-graphite"><span className="accent-rule" aria-hidden="true" />Faraklit</p>
+            <h2 className="mt-6 max-w-[760px] font-serif text-[36px] font-normal leading-[1.1] tracking-[-0.02em] text-white sm:text-[48px] lg:text-[54px]">
               Hukuk büronuzun günlük işlerini daha sade yönetin.
             </h2>
           </div>
           <div>
-            <Link to="/pricing" className="inline-flex min-h-11 items-center gap-2 border-b border-white pb-1 text-[16px] font-semibold text-white">
-              Fiyatları incele <ArrowRight size={15} />
-            </Link>
-            <p className="mt-5 max-w-[420px] text-[15px] leading-7 text-white/52">Dosya, UETS, içtihat, dilekçe, görev ve ekip çalışması aynı sistemde.</p>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full bg-white px-7 text-[15px] font-medium text-anthracite transition-colors hover:bg-paper">
+                <Instagram size={17} /> Instagram’dan iletişime geçin
+              </a>
+              <Link to="/login" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 px-7 text-[15px] font-medium text-white transition-colors hover:border-white/50">
+                Giriş yapın
+              </Link>
+            </div>
+            <p className="mt-6 max-w-[420px] text-[15px] leading-7 text-white/60">Dosya, UETS, içtihat, dilekçe, görev ve ekip çalışması aynı sistemde.</p>
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@ const eventLabels: Record<string, string> = {
   'feature.petition.opened': 'Dilekçe modülü açıldı',
   'feature.document_analysis.opened': 'Belge analizi modülü açıldı',
   'feature.uets.opened': 'UETS modülü açıldı',
-  'feature.official_gazette.opened': 'Resmî Gazete modülü açıldı',
+  'feature.official_gazette.opened': 'Resmi Gazete modülü açıldı',
   'subscription.created': 'Abonelik oluşturuldu',
   'payment.completed': 'Ödeme tamamlandı',
   'application.updated': 'Uygulama güncellendi',

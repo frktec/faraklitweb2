@@ -1,219 +1,318 @@
-import { useEffect, useState } from 'react';
-import {
-  BellRing,
-  Bot,
-  CheckCircle2,
-  CircleDot,
-  FileSignature,
-  FolderOpen,
-  Monitor,
-  ShieldCheck,
-  Smartphone,
-  Sparkles,
-  TabletSmartphone,
-} from 'lucide-react';
+import { Check, FileSignature, Instagram, Laptop, Mic, Monitor, Smartphone, type LucideIcon } from 'lucide-react';
 import { Navbar } from '@/components/landing/Navbar';
 import { Footer } from '@/components/landing/Footer';
+import { LiveWallpaper } from '@/components/landing/LiveWallpaper';
+import { INSTAGRAM_URL } from '@/lib/contact';
 
-const phases = [
+type Status = 'done' | 'active' | 'next' | 'planned';
+
+type Milestone = {
+  title: string;
+  status: Status;
+  label: string;
+  description: string;
+  Icon: LucideIcon;
+  /** Pin position on the desktop map, in the road's 1000 × 240 coordinate space. */
+  x: number;
+  y: number;
+};
+
+const milestones: Milestone[] = [
   {
     title: 'Masaüstü çekirdek',
-    status: 'Şimdi',
-    description: 'Dosya, UETS, görev, içtihat, dilekçe ve ajan altyapısının masaüstü deneyimini olgunlaştırıyoruz.',
+    status: 'done',
+    label: 'Yayında',
+    description: 'Dosya, UETS, görev, içtihat, dilekçe ve ajan altyapısı Windows masaüstünde kullanımda.',
     Icon: Monitor,
-  },
-  {
-    title: 'Mobil temel',
-    status: 'Sırada',
-    description: 'iOS ve Android’de dosyaları, evrakları, duruşmaları ve görevleri hızlıca görüntüleme.',
-    Icon: Smartphone,
-  },
-  {
-    title: 'Mobil işlemler',
-    status: 'Planlandı',
-    description: 'Görev ve duruşma ekleme, tamamlandı işaretleme, bildirimler ve günlük iş akışı.',
-    Icon: TabletSmartphone,
-  },
-  {
-    title: 'Mobil evrak imzalama',
-    status: 'Planlandı',
-    description: 'Faraklit’te oluşturulan evrakları mobil imzalama/onay akışına taşıma ve imzalı sürümü dosyada saklama.',
-    Icon: FileSignature,
+    x: 100,
+    y: 64,
   },
   {
     title: 'Sesli asistan ve ajanlar',
-    status: 'Geliştiriliyor',
+    status: 'done',
+    label: 'Tamamlandı',
     description: 'Sesli komutlarla dosya sorma, görev oluşturma ve ajanların günlük işleri birlikte tamamlaması.',
-    Icon: Bot,
+    Icon: Mic,
+    x: 300,
+    y: 176,
   },
-] as const;
+  {
+    title: 'iOS ve Android desteği',
+    status: 'active',
+    label: 'Geliştiriliyor',
+    description: 'Dosyalar, evraklar, duruşmalar, görevler ve bildirimler telefon ve tablette.',
+    Icon: Smartphone,
+    x: 500,
+    y: 64,
+  },
+  {
+    title: 'Mobil imza entegrasyonu',
+    status: 'next',
+    label: 'Sırada',
+    description: 'Faraklit’te hazırlanan evrakı telefondan imzalama; imzalı sürüm otomatik olarak dosyada saklanır.',
+    Icon: FileSignature,
+    x: 700,
+    y: 176,
+  },
+  {
+    title: 'macOS desteği',
+    status: 'planned',
+    label: 'Planlandı',
+    description: 'Faraklit masaüstü deneyiminin Mac bilgisayarlara taşınması.',
+    Icon: Laptop,
+    x: 900,
+    y: 64,
+  },
+];
 
-const mobileStages = [
-  { title: 'Mobil arayüz sistemi', detail: 'Telefon ve tablet için sade, hızlı ekran yapısı.', Icon: Smartphone },
-  { title: 'Güvenli oturum', detail: 'Hesap, cihaz ve oturum güvenliğinin mobilde taşınması.', Icon: ShieldCheck },
-  { title: 'Dosya ve evrak görüntüleme', detail: 'Dosya özeti, evraklar, duruşmalar ve görevler.', Icon: FolderOpen },
-  { title: 'Bildirim ve günlük işler', detail: 'Yaklaşan duruşma, süre ve görev bildirimleri.', Icon: BellRing },
-  { title: 'Mobil imza akışı', detail: 'Hazırlanan evrakı telefondan imza/onay sürecine alma.', Icon: FileSignature },
-] as const;
+// The road winds through every milestone. The first part (up to the last
+// milestone in development) is drawn as travelled road, the rest as planned.
+const TRAVELLED_ROAD = 'M0 150 C40 150 55 64 100 64 C200 64 200 176 300 176 C400 176 400 64 500 64';
+const PLANNED_ROAD = 'M500 64 C600 64 600 176 700 176 C800 176 800 64 900 64 C945 64 960 110 1000 110';
 
-export function RoadmapPage() {
-  const [active, setActive] = useState(0);
-  const [mobileActive, setMobileActive] = useState(0);
-  const ActivePhaseIcon = phases[active].Icon;
-  const ActiveMobileIcon = mobileStages[mobileActive].Icon;
+// Faint contour lines give the panel the feel of a printed map.
+const CONTOURS = [
+  'M-20 40 C120 10 260 70 420 30 S720 -10 1020 40',
+  'M-20 214 C160 190 300 238 480 210 S820 180 1020 222',
+  'M560 120 C600 92 680 96 700 124 S640 160 590 150 S540 138 560 120 Z',
+  'M150 118 C180 100 236 104 244 124 S204 148 176 142 S132 130 150 118 Z',
+];
 
-  useEffect(() => {
-    const timer = window.setInterval(() => setMobileActive((value) => (value + 1) % mobileStages.length), 2200);
-    return () => window.clearInterval(timer);
-  }, []);
+const MAP_HEIGHT = 240;
+
+function Pin({ milestone, size = 'md' }: { milestone: Milestone; size?: 'md' | 'sm' }) {
+  const tone =
+    milestone.status === 'done'
+      ? 'bg-anthracite text-white shadow-[0_10px_24px_-8px_rgba(35,36,38,0.55)]'
+      : milestone.status === 'active'
+        ? 'border-2 border-[#C4A46C] bg-anthracite text-[#F3E3BE] shadow-[0_0_0_5px_rgba(196,164,108,0.25),0_10px_28px_-6px_rgba(196,164,108,0.7)]'
+      : milestone.status === 'next'
+        ? 'border-2 border-anthracite bg-white text-anthracite'
+        : 'border border-anthracite/25 bg-white text-graphite-600';
+  const box = size === 'md' ? 'h-12 w-12' : 'h-11 w-11';
+  return (
+    <span className={`relative flex ${box} items-center justify-center rounded-full ${milestone.status === 'active' ? '' : 'ring-[6px] ring-[#f8f6f1]'} ${tone}`}>
+      <milestone.Icon size={size === 'md' ? 19 : 17} strokeWidth={1.7} />
+      {milestone.status === 'done' && (
+        <span className="absolute -bottom-0.5 -right-0.5 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-white text-anthracite ring-2 ring-[#f8f6f1]">
+          <Check size={11} strokeWidth={2.6} />
+        </span>
+      )}
+    </span>
+  );
+}
+
+function StatusChip({ milestone }: { milestone: Milestone }) {
+  const tone =
+    milestone.status === 'done'
+      ? 'bg-anthracite text-white'
+      : milestone.status === 'active'
+        ? 'bg-[rgba(196,164,108,0.2)] text-[#7A5E28]'
+      : milestone.status === 'next'
+        ? 'border border-anthracite/40 text-anthracite'
+        : 'border border-anthracite/15 text-graphite-600';
+  return (
+    <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold tracking-[0.04em] ${tone}`}>{milestone.label}</span>
+  );
+}
+
+function MilestoneCard({ milestone, index }: { milestone: Milestone; index: number }) {
+  return (
+    <div className="rounded-[18px] border border-anthracite/10 bg-white/85 p-5 shadow-[0_24px_60px_-40px_rgba(35,36,38,0.45)]">
+      <div className="flex items-center justify-between gap-3">
+        <span className="font-serif text-[15px] italic text-graphite-600">{String(index + 1).padStart(2, '0')}</span>
+        <StatusChip milestone={milestone} />
+      </div>
+      <p className="mt-3 font-serif text-[20px] leading-snug text-anthracite">{milestone.title}</p>
+      <p className="mt-2 text-[13.5px] leading-[1.6] text-[#5f5f5f]">{milestone.description}</p>
+    </div>
+  );
+}
+
+function RoadPaths({ planned }: { planned: boolean }) {
+  const d = planned ? PLANNED_ROAD : TRAVELLED_ROAD;
+  return (
+    <>
+      <path d={d} fill="none" stroke={planned ? '#D6D6D3' : '#1B1C1D'} strokeWidth={34} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+      <path d={d} fill="none" stroke={planned ? '#EEEEEC' : '#2D2E30'} strokeWidth={28} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+      <path
+        d={d}
+        fill="none"
+        stroke={planned ? 'rgba(35,36,38,0.35)' : 'rgba(255,255,255,0.8)'}
+        strokeWidth={1.6}
+        strokeDasharray="10 12"
+        vectorEffect="non-scaling-stroke"
+      />
+    </>
+  );
+}
+
+function DesktopMap() {
+  const top = milestones.map((m, i) => ({ m, i })).filter(({ m }) => m.y < MAP_HEIGHT / 2);
+  const bottom = milestones.map((m, i) => ({ m, i })).filter(({ m }) => m.y >= MAP_HEIGHT / 2);
+  const column = (x: number) => ({ gridColumnStart: Math.floor(x / 200) + 1, gridRowStart: 1 });
 
   return (
-    <div className="min-h-screen bg-[#f6f8fb]">
+    <div className="hidden lg:block">
+      <div className="grid grid-cols-5 items-end gap-5">
+        {top.map(({ m, i }) => (
+          <div key={m.title} style={column(m.x)}>
+            <MilestoneCard milestone={m} index={i} />
+          </div>
+        ))}
+      </div>
+
+      <div className="relative" style={{ height: MAP_HEIGHT }}>
+        <svg viewBox={`0 0 1000 ${MAP_HEIGHT}`} preserveAspectRatio="none" className="absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
+          {CONTOURS.map((d) => (
+            <path key={d} d={d} fill="none" stroke="rgba(35,36,38,0.08)" strokeWidth={1} vectorEffect="non-scaling-stroke" />
+          ))}
+          <RoadPaths planned />
+          <RoadPaths planned={false} />
+        </svg>
+
+        {milestones.map((m) => {
+          const isTop = m.y < MAP_HEIGHT / 2;
+          return (
+            <div key={m.title}>
+              {/* Hairline from the card down (or up) to the pin */}
+              <span
+                aria-hidden="true"
+                className="absolute w-px -translate-x-1/2 bg-anthracite/20"
+                style={
+                  isTop
+                    ? { left: `${m.x / 10}%`, top: 0, height: m.y - 24 }
+                    : { left: `${m.x / 10}%`, top: m.y + 24, bottom: 0 }
+                }
+              />
+              <div className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${m.x / 10}%`, top: m.y }}>
+                <Pin milestone={m} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="grid grid-cols-5 items-start gap-5">
+        {bottom.map(({ m, i }) => (
+          <div key={m.title} style={column(m.x)}>
+            <MilestoneCard milestone={m} index={i} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MobileMap() {
+  const lastTravelled = milestones.reduce((last, m, i) => (m.status === 'done' || m.status === 'active' ? i : last), 0);
+  return (
+    <ol className="lg:hidden">
+      {milestones.map((m, i) => {
+        const isLast = i === milestones.length - 1;
+        const travelled = i < lastTravelled;
+        return (
+          <li key={m.title} className={`relative pl-[68px] ${isLast ? '' : 'pb-6'}`}>
+            {!isLast && (
+              <span
+                aria-hidden="true"
+                className={`absolute bottom-0 left-[14px] top-6 w-[20px] ${travelled ? 'bg-anthracite-800 ring-[3px] ring-inset ring-anthracite-900' : 'bg-[#EEEEEC] ring-1 ring-inset ring-paper-300'}`}
+              >
+                <span
+                  className={`absolute inset-y-0 left-1/2 -translate-x-1/2 border-l-[1.5px] border-dashed ${travelled ? 'border-white/80' : 'border-anthracite/30'}`}
+                />
+              </span>
+            )}
+            <div className="absolute left-0 top-0 z-10 ml-[2px]">
+              <Pin milestone={m} size="sm" />
+            </div>
+            <MilestoneCard milestone={m} index={i} />
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+function Legend() {
+  return (
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[12px] text-[#6a6a6a]">
+      <span className="inline-flex items-center gap-2">
+        <span className="h-2.5 w-8 rounded-full bg-anthracite-800" /> Tamamlanan yol
+      </span>
+      <span className="inline-flex items-center gap-2">
+        <span className="h-2.5 w-8 rounded-full border border-paper-300 bg-[#EEEEEC]" /> Planlanan yol
+      </span>
+    </div>
+  );
+}
+
+function Compass() {
+  return (
+    <div aria-hidden="true" className="hidden items-center gap-2 text-graphite-600 sm:flex">
+      <svg viewBox="0 0 24 24" className="h-7 w-7">
+        <circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" strokeOpacity={0.35} />
+        <path d="M12 3.5 14.2 12 12 10.8 9.8 12Z" fill="#232426" />
+        <path d="M12 20.5 9.8 12 12 13.2 14.2 12Z" fill="none" stroke="currentColor" strokeOpacity={0.6} />
+      </svg>
+      <span className="font-serif text-[13px] italic">K</span>
+    </div>
+  );
+}
+
+export function RoadmapPage() {
+  return (
+    <div className="relative isolate min-h-screen">
+      <LiveWallpaper />
       <Navbar />
       <main>
-        <section className="harvey-paper border-b border-[#dce4ec]">
-          <div className="mx-auto max-w-8xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-            <div className="max-w-[920px]">
-              <p className="section-label text-[#526983]">Geliştirme Rotası</p>
-              <h1 className="mt-5 font-display text-[40px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#17263c] sm:text-[58px] lg:text-[70px]">
-                Faraklit’in sıradaki adımlarını canlı izleyin.
-              </h1>
-              <p className="mt-6 max-w-[700px] text-[17px] leading-7 text-[#627080]">
-                Masaüstünden mobile, evrak imzalamadan sesli asistana kadar geliştirme yönümüzü tek sayfada gösteriyoruz.
+        <section className="border-b border-anthracite/10">
+          <div className="mx-auto max-w-[900px] px-4 pb-16 pt-20 text-center sm:px-6 lg:pb-20 lg:pt-28">
+            <p className="inline-flex items-center gap-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-[#6b6b6b]">
+              <span className="accent-rule hidden sm:inline-block" aria-hidden="true" />
+              Yol Haritası
+              <span className="accent-rule hidden sm:inline-block" aria-hidden="true" />
+            </p>
+            <h1 className="mt-8 font-serif text-[40px] font-normal leading-[1.06] tracking-[-0.025em] text-anthracite sm:text-[56px] lg:text-[66px]">
+              Faraklit’in yolu.
+              <span className="block italic text-anthracite-700">Masaüstünden cebinize.</span>
+            </h1>
+            <p className="mx-auto mt-7 max-w-[620px] text-[17px] leading-8 text-[#545454]">
+              Tamamlanan adımları, bugün üzerinde çalıştıklarımızı ve sıradaki durakları tek haritada gösteriyoruz.
+            </p>
+          </div>
+        </section>
+
+        <section className="border-b border-anthracite/10">
+          <div className="mx-auto max-w-8xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+            <div
+              className="relative overflow-hidden rounded-[28px] border border-anthracite/10 bg-white/60 px-4 py-8 shadow-[0_60px_140px_-80px_rgba(35,36,38,0.35)] sm:px-8 sm:py-10 lg:px-10 lg:py-12"
+              style={{
+                backgroundImage:
+                  'linear-gradient(rgba(35,36,38,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(35,36,38,0.035) 1px, transparent 1px)',
+                backgroundSize: '48px 48px',
+              }}
+            >
+              <div className="mb-8 flex items-center justify-between gap-4 lg:mb-10">
+                <Legend />
+                <Compass />
+              </div>
+              <DesktopMap />
+              <MobileMap />
+            </div>
+
+            <div className="mt-10 flex flex-col items-center gap-5 text-center">
+              <p className="max-w-[560px] text-[13px] leading-6 text-[#8a8a8a]">
+                Rota, geliştirme önceliklerine göre güncellenir; aşamalar için tarih taahhüdü verilmez.
               </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="border-b border-[#dce4ec] bg-white">
-          <div className="mx-auto max-w-8xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-            <div className="mb-8 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <p className="section-label text-[#66778b]">Canlı rota</p>
-                <h2 className="mt-3 font-display text-[32px] font-semibold tracking-[-0.045em] text-[#1c2d43] sm:text-[44px]">Neyi, hangi sırayla geliştiriyoruz?</h2>
-              </div>
-              <div className="flex items-center gap-2 text-[14px] font-semibold text-emerald-700">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 live-demo-pulse" /> Güncel ürün rotası
-              </div>
-            </div>
-
-            <div className="grid gap-5 lg:grid-cols-[0.82fr_1.18fr]">
-              <div className="space-y-2.5">
-                {phases.map((phase, index) => (
-                  <button
-                    key={phase.title}
-                    type="button"
-                    onClick={() => setActive(index)}
-                    className={`flex w-full items-start gap-3 rounded-[13px] border p-4 text-left transition ${active === index ? 'border-[#9fb1c4] bg-[#f5f8fb] shadow-[0_12px_30px_rgba(30,53,78,.08)]' : 'border-[#e2e8ee] bg-white hover:bg-[#f8fafc]'}`}
-                  >
-                    <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] ${active === index ? 'bg-[#173252] text-white' : 'bg-[#edf2f6] text-[#61758a]'}`}>
-                      <phase.Icon size={18} />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <p className="text-[16px] font-semibold text-[#2b4058]">{phase.title}</p>
-                        <span className="rounded-full bg-[#edf3f8] px-2 py-1 text-[12px] font-semibold text-[#587089]">{phase.status}</span>
-                      </div>
-                      <p className="mt-1 text-[14px] leading-5 text-[#778492]">{phase.description}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              <div className="overflow-hidden rounded-[18px] border border-[#d8e1e9] bg-[#0f223b] text-white shadow-[0_24px_65px_rgba(19,41,69,.14)]">
-                <div className="border-b border-white/10 px-5 py-4">
-                  <p className="text-[13px] font-semibold uppercase tracking-[0.15em] text-white/35">Seçili aşama</p>
-                  <h3 className="mt-1 text-[23px] font-semibold">{phases[active].title}</h3>
-                </div>
-                <div className="p-5 sm:p-6">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-[14px] border border-white/10 bg-white/[0.07] text-cyan-200">
-                    <ActivePhaseIcon size={25} />
-                  </div>
-                  <p className="mt-5 max-w-[620px] text-[17px] leading-7 text-white/72">{phases[active].description}</p>
-                  <div className="mt-7 grid gap-3 sm:grid-cols-3">
-                    {['Ürün deneyimi', 'Güvenlik', 'Hız'].map((item, index) => (
-                      <div key={item} className="rounded-[11px] border border-white/10 bg-white/[0.045] p-3.5">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-[14px] font-semibold text-white/72">{item}</span>
-                          {index === 0 ? <Sparkles size={15} className="text-cyan-200" /> : index === 1 ? <ShieldCheck size={15} className="text-emerald-200" /> : <CircleDot size={15} className="text-violet-200" />}
-                        </div>
-                        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10"><div className="roadmap-progress h-full rounded-full bg-cyan-300/70" /></div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="border-b border-[#dce4ec] bg-[#f2f6fa]">
-          <div className="mx-auto max-w-8xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-            <div className="grid items-center gap-9 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
-              <div>
-                <p className="section-label text-[#536a84]">Mobil geliştirme</p>
-                <h2 className="mt-4 font-display text-[33px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#1e3047] sm:text-[45px]">iOS ve Android, masaüstünün yanında çalışacak.</h2>
-                <p className="mt-4 text-[16px] leading-7 text-[#687687]">Mobil uygulamada önce hızlı görüntüleme ve günlük işlemler; ardından bildirimler ve evrak imzalama akışı geliyor.</p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  <span className="rounded-full border border-[#cfdbe6] bg-white px-3 py-1.5 text-[14px] font-semibold text-[#4e657e]">iOS</span>
-                  <span className="rounded-full border border-[#cfdbe6] bg-white px-3 py-1.5 text-[14px] font-semibold text-[#4e657e]">Android</span>
-                  <span className="rounded-full border border-[#cfdbe6] bg-white px-3 py-1.5 text-[14px] font-semibold text-[#4e657e]">Telefon + tablet</span>
-                </div>
-              </div>
-
-              <div className="overflow-hidden rounded-[20px] border border-[#d6e0e9] bg-white shadow-[0_22px_60px_rgba(26,49,74,.09)]">
-                <div className="flex items-center justify-between gap-3 border-b border-[#e3e9ef] bg-[#f8fafc] px-4 py-3 sm:px-5">
-                  <div>
-                    <p className="text-[15px] font-semibold text-[#2c4058]">Mobil geliştirme akışı</p>
-                    <p className="text-[13px] text-[#7d8996]">Aşamalar sırayla canlandırılır</p>
-                  </div>
-                  <span className="flex items-center gap-1.5 text-[13px] font-semibold text-emerald-700"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500 live-demo-pulse" /> canlı</span>
-                </div>
-                <div className="p-4 sm:p-5">
-                  <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_220px] md:items-center">
-                    <div className="space-y-2.5">
-                      {mobileStages.map((stage, index) => (
-                        <button
-                          key={stage.title}
-                          type="button"
-                          onClick={() => setMobileActive(index)}
-                          className={`grid w-full grid-cols-[40px_minmax(0,1fr)_auto] items-center gap-3 rounded-[11px] border p-3 text-left transition ${index === mobileActive ? 'border-[#9fb2c6] bg-[#f6f9fc] shadow-sm' : index < mobileActive ? 'border-[#dae7df] bg-[#f5f9f6]' : 'border-[#e5eaf0] bg-white'}`}
-                        >
-                          <span className={`flex h-9 w-9 items-center justify-center rounded-[9px] ${index < mobileActive ? 'bg-emerald-100 text-emerald-700' : index === mobileActive ? 'bg-[#173252] text-white' : 'bg-[#eff3f6] text-[#8a98a5]'}`}>
-                            {index < mobileActive ? <CheckCircle2 size={17} /> : <stage.Icon size={17} />}
-                          </span>
-                          <div>
-                            <p className="text-[15px] font-semibold text-[#31455d]">{stage.title}</p>
-                            <p className="mt-0.5 text-[13px] leading-5 text-[#7a8794]">{stage.detail}</p>
-                          </div>
-                          <span className={`h-2 w-2 rounded-full ${index === mobileActive ? 'bg-cyan-500 live-demo-pulse' : index < mobileActive ? 'bg-emerald-500' : 'bg-[#cbd4dc]'}`} />
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="mx-auto w-[196px] rounded-[30px] border-[7px] border-[#15283f] bg-[#15283f] p-[3px] shadow-[0_18px_45px_rgba(20,42,68,.18)]">
-                      <div className="min-h-[360px] overflow-hidden rounded-[21px] bg-[#f5f8fb]">
-                        <div className="mx-auto mt-2 h-4 w-16 rounded-full bg-[#15283f]" />
-                        <div className="p-3.5">
-                          <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-semibold text-[#2f455d]">Faraklit Mobil</span>
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 live-demo-pulse" />
-                          </div>
-                          <div className="mt-7 flex h-11 w-11 items-center justify-center rounded-[12px] bg-[#173252] text-white">
-                            <ActiveMobileIcon size={20} />
-                          </div>
-                          <p className="mt-4 text-[16px] font-semibold leading-5 text-[#273d55]">{mobileStages[mobileActive].title}</p>
-                          <p className="mt-2 text-[12px] leading-5 text-[#758391]">{mobileStages[mobileActive].detail}</p>
-                          <div className="mt-6 space-y-2">
-                            {[92, 74, 86].map((width, index) => <div key={index} className="h-9 rounded-[9px] border border-[#e0e7ee] bg-white p-2"><div className="h-2 rounded bg-[#e7edf2]" style={{ width: `${width}%` }} /></div>)}
-                          </div>
-                          <div className="mt-5 h-9 rounded-[9px] bg-[#173252] text-center text-[11px] font-semibold leading-9 text-white">Mobil önizleme</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-anthracite/20 bg-white/70 px-5 py-2.5 text-[14px] font-medium text-anthracite transition hover:border-anthracite/40"
+              >
+                <Instagram size={16} strokeWidth={1.7} /> Önerinizi Instagram’dan iletin
+              </a>
             </div>
           </div>
         </section>

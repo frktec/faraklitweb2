@@ -6,22 +6,22 @@ const rows = [
 
 export function SecuritySection() {
   return (
-    <section id="guvenlik" className="border-b border-[#2a2e34] bg-[#171a20] text-white">
-      <div className="mx-auto max-w-8xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+    <section id="guvenlik" className="bg-anthracite/95 text-white">
+      <div className="mx-auto max-w-8xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
         <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
           <div>
-            <p className="text-[13px] font-semibold uppercase tracking-[0.17em] text-white/45">Güvenlik</p>
-            <h2 className="mt-4 max-w-[520px] font-display text-[32px] font-semibold leading-[1.03] tracking-[-0.045em] text-white sm:text-[44px]">
+            <p className="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[0.24em] text-graphite"><span className="accent-rule" aria-hidden="true" />Güvenlik</p>
+            <h2 className="mt-6 max-w-[480px] font-serif text-[34px] font-normal leading-[1.12] tracking-[-0.02em] text-white sm:text-[42px]">
               Hukuki veriler için kontrollü erişim.
             </h2>
-            <p className="mt-5 max-w-[500px] text-[15px] leading-7 text-white/55">Rol bazlı erişim, güvenli aktarım ve veri minimizasyonu yaklaşımımızın temelini oluşturur.</p>
+            <p className="mt-5 max-w-[500px] text-[16px] leading-7 text-white/60">Rol bazlı erişim, güvenli aktarım ve veri minimizasyonu yaklaşımımızın temelini oluşturur.</p>
           </div>
 
-          <div className="border-t border-white/12">
+          <div className="border-t border-white/15">
             {rows.map(([name, text]) => (
-              <div key={name} className="grid gap-2 border-b border-white/12 py-5 sm:grid-cols-[180px_1fr] sm:gap-8">
-                <p className="text-[15px] font-semibold text-white">{name}</p>
-                <p className="text-[15px] leading-6 text-white/55">{text}</p>
+              <div key={name} className="grid gap-2 border-b border-white/15 py-6 sm:grid-cols-[200px_1fr] sm:gap-8">
+                <p className="text-[16px] font-semibold text-white">{name}</p>
+                <p className="text-[15px] leading-7 text-white/60">{text}</p>
               </div>
             ))}
           </div>

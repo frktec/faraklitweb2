@@ -13,8 +13,8 @@
     font-size: 16px;
     line-height: 1.6;
     font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-    background-color: #F6F7F8;
-    color: #182336;
+    background-color: #F4F4F3;
+    color: #232426;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
   h1, h2, h3, h4, h5, h6 {
@@ -24,7 +24,6 @@
     font-family: 'Manrope', system-ui, -apple-system, sans-serif;
   }
   .font-serif {
-    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
     font-feature-settings: 'liga', 'kern';
   }
 }
@@ -59,122 +58,13 @@
   }
 }
 
-@layer utilities {
-  .fade-in {
-    animation: fadeIn 0.4s ease-out;
-  }
-  .window-reveal {
-    animation: windowReveal 0.6s ease-out;
-  }
-  .scrollbar-thin {
-    scrollbar-width: thin;
-    scrollbar-color: #D9DEE3 transparent;
-  }
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: #D9DEE3;
-    border-radius: 3px;
-  }
-  .hero-accent {
-    background: linear-gradient(135deg, #1D3068 0%, #2A45A0 50%, #3558C7 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 200% auto;
-    animation: heroShimmer 4s ease-in-out infinite;
-  }
-  .animate-data-flow {
-    animation: dataFlow 6s linear infinite;
-  }
-  .animate-ping-slow {
-    animation: pingSlow 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
-  }
-  .animate-lock-glow {
-    animation: lockGlow 3s ease-in-out infinite;
-  }
-  .animate-encrypt-flicker {
-    animation: encryptFlicker 1.5s steps(1) infinite;
-  }
-  .slide-in-up {
-    opacity: 0;
-    transform: translateY(10px);
-    animation: slideInUp 0.5s ease-out forwards;
-  }
-  .slide-in-up-delay-1 {
-    opacity: 0;
-    transform: translateY(10px);
-    animation: slideInUp 0.5s ease-out 0.15s forwards;
-  }
-  .slide-in-up-delay-2 {
-    opacity: 0;
-    transform: translateY(10px);
-    animation: slideInUp 0.5s ease-out 0.3s forwards;
-  }
-  .slide-in-up-delay-3 {
-    opacity: 0;
-    transform: translateY(10px);
-    animation: slideInUp 0.5s ease-out 0.45s forwards;
-  }
-  .typing-dot {
-    animation: typingDot 1.4s ease-in-out infinite;
-  }
-  .typing-dot-2 {
-    animation: typingDot 1.4s ease-in-out 0.2s infinite;
-  }
-  .typing-dot-3 {
-    animation: typingDot 1.4s ease-in-out 0.4s infinite;
-  }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes windowReveal {
-  from { opacity: 0; transform: translateY(8px) scale(0.99); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes heroShimmer {
-  0%, 100% { background-position: 0% center; }
-  50% { background-position: 100% center; }
-}
-@keyframes dataFlow {
-  0% { transform: translateY(-100%); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(140px); opacity: 0; }
-}
-@keyframes pingSlow {
-  0% { transform: scale(1); opacity: 0.5; }
-  75%, 100% { transform: scale(1.8); opacity: 0; }
-}
-@keyframes lockGlow {
-  0%, 100% { box-shadow: 0 0 20px rgba(74, 114, 224, 0.3); }
-  50% { box-shadow: 0 0 35px rgba(74, 114, 224, 0.55); }
-}
-@keyframes encryptFlicker {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
-}
-@keyframes slideInUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes typingDot {
-  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
-  30% { opacity: 1; transform: translateY(-3px); }
-}
-
 html {
   scroll-behavior: smooth;
 }
 
 ::selection {
-  background: rgba(38, 58, 88, 0.16);
-  color: #182336;
+  background: rgba(31,31,31, 0.14);
+  color: #232323;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -186,42 +76,10 @@ html {
   }
 }
 
-/* Lightweight interactive product demos used on the landing page. */
-.live-demo {
-  contain: layout paint;
-}
-.live-demo-row {
-  animation: liveDemoRowIn 420ms ease both;
-}
-.live-demo-progress {
-  transform-origin: left;
-  animation: liveDemoProgress 900ms cubic-bezier(.2,.8,.2,1) both;
-}
-.live-demo-pulse {
-  animation: liveDemoPulse 2.2s ease-in-out infinite;
-}
-@keyframes liveDemoRowIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes liveDemoProgress {
-  from { transform: scaleX(.08); opacity: .45; }
-  to { transform: scaleX(1); opacity: 1; }
-}
-@keyframes liveDemoPulse {
-  0%, 100% { opacity: .55; box-shadow: 0 0 0 0 rgba(16, 185, 129, .08); }
-  50% { opacity: 1; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .live-demo-row, .live-demo-progress, .live-demo-pulse { animation: none !important; }
-}
-
-/* Landing-page responsive safeguards. */
 html, body, #root {
   width: 100%;
   max-width: 100%;
-  /* clip prevents accidental horizontal overflow without creating a scroll container.
-     Using overflow-x:hidden here breaks position:sticky in the cinematic product tour. */
+  /* clip prevents accidental horizontal overflow without creating a scroll container. */
   overflow-x: clip;
 }
 
@@ -234,194 +92,170 @@ img, svg, video, canvas {
     font-size: 0.65rem;
     letter-spacing: 0.12em;
   }
-  .live-demo button,
-  .live-demo input {
-    touch-action: manipulation;
-  }
-}
-
-
-/* Minimal editorial landing surface. */
-.harvey-paper { background: #f7f8fa; }
-.wallpaper-sand {
-  background: #f7f8fa;
-  background-image: none;
-}
-/* legacy */
-.wallpaper-sand-legacy {
-  background-color: #edf3f8;
-  background-image:
-    linear-gradient(145deg, rgba(255,255,255,.76), rgba(232,239,246,.72)),
-    radial-gradient(circle at 84% 16%, rgba(54, 91, 135, .15), transparent 26%),
-    radial-gradient(circle at 10% 84%, rgba(41, 126, 137, .09), transparent 28%),
-    repeating-linear-gradient(90deg, rgba(32, 58, 88, .025) 0 1px, transparent 1px 72px);
-}
-.wallpaper-blueprint {
-  background: #f5f6f7;
-  background-image: none;
-}
-/* legacy */
-.wallpaper-blueprint-legacy {
-  background-color: #edf4fb;
-  background-image:
-    linear-gradient(135deg, rgba(255,255,255,.74), rgba(225,237,248,.70)),
-    linear-gradient(90deg, rgba(40, 91, 145, .055) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(40, 91, 145, .042) 1px, transparent 1px),
-    radial-gradient(circle at 78% 18%, rgba(42, 111, 176, .15), transparent 24%);
-  background-size: auto, 34px 34px, 34px 34px, auto;
-}
-/* Legacy class kept for older markup, intentionally cool instead of amber. */
-.wallpaper-amber {
-  background-color: #edf4fb;
-  background-image:
-    linear-gradient(135deg, rgba(255,255,255,.74), rgba(225,237,248,.70)),
-    linear-gradient(90deg, rgba(40, 91, 145, .055) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(40, 91, 145, .042) 1px, transparent 1px),
-    radial-gradient(circle at 78% 18%, rgba(42, 111, 176, .15), transparent 24%);
-  background-size: auto, 34px 34px, 34px 34px, auto;
-}
-.wallpaper-violet {
-  background: #f5f6f7;
-  background-image: none;
-}
-/* legacy */
-.wallpaper-violet-legacy {
-  background-color: #f1f1f8;
-  background-image:
-    linear-gradient(120deg, rgba(255,255,255,.72), rgba(235,235,247,.66)),
-    radial-gradient(ellipse at 82% 22%, rgba(102, 83, 170, .16), transparent 27%),
-    radial-gradient(ellipse at 13% 82%, rgba(49, 96, 131, .10), transparent 30%),
-    repeating-linear-gradient(135deg, rgba(55, 63, 100, .028) 0 1px, transparent 1px 18px);
-}
-.wallpaper-cyan {
-  background: #f5f6f7;
-  background-image: none;
-}
-/* legacy */
-.wallpaper-cyan-legacy {
-  background-color: #edf6f7;
-  background-image:
-    linear-gradient(138deg, rgba(255,255,255,.74), rgba(228,242,244,.65)),
-    radial-gradient(circle at 16% 18%, rgba(28, 128, 145, .14), transparent 24%),
-    radial-gradient(circle at 85% 78%, rgba(48, 89, 129, .10), transparent 28%),
-    repeating-linear-gradient(90deg, rgba(22, 87, 101, .026) 0 1px, transparent 1px 64px);
-}
-.wallpaper-indigo {
-  background: #f5f6f7;
-  background-image: none;
-}
-/* legacy */
-.wallpaper-indigo-legacy {
-  background-color: #f0f2f8;
-  background-image:
-    linear-gradient(125deg, rgba(255,255,255,.78), rgba(232,235,247,.62)),
-    radial-gradient(circle at 14% 20%, rgba(64, 78, 170, .14), transparent 25%),
-    radial-gradient(circle at 88% 75%, rgba(87, 65, 142, .12), transparent 28%),
-    linear-gradient(45deg, transparent 48%, rgba(50, 62, 100, .032) 49%, rgba(50, 62, 100, .032) 51%, transparent 52%);
-  background-size: auto, auto, auto, 42px 42px;
-}
-.wallpaper-night {
-  background: #171a20;
-  background-image: none;
-}
-/* legacy */
-.wallpaper-night-legacy {
-  background-color: #0d213a;
-  background-image:
-    radial-gradient(circle at 78% 16%, rgba(83, 119, 174, .30), transparent 25%),
-    radial-gradient(circle at 14% 84%, rgba(36, 126, 139, .16), transparent 28%),
-    linear-gradient(135deg, rgba(255,255,255,.025), transparent 42%),
-    repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 1px, transparent 1px 80px);
-}
-
-/* All dock tabs share the exact same demo viewport, so switching tabs never jumps the page. */
-.live-demo-stage {
-  height: 500px;
-}
-@media (min-width: 640px) {
-  .live-demo-stage { height: 540px; }
-}
-@media (min-width: 1024px) {
-  .live-demo-stage { height: 560px; }
 }
 
 /* Keep the smallest common utility sizes readable throughout the app. */
 .text-xs { font-size: 13px; line-height: 1.25rem; }
 .text-sm { font-size: 15px; line-height: 1.45rem; }
 
-/* Keep the public navigation readable regardless of wallpaper or route background. */
-.site-navbar {
-  background: #15181d !important;
-  color: #fff !important;
-  isolation: isolate;
-}
-.site-navbar::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: #15181d;
-}
-
-/* Pricing page background: cool and architectural, without a yellow cast. */
-.pricing-wallpaper {
-  background-color: #edf3f8;
-  background-image:
-    linear-gradient(135deg, rgba(255,255,255,.92), rgba(234,241,248,.84)),
-    radial-gradient(circle at 16% 12%, rgba(56, 92, 137, .15), transparent 26%),
-    radial-gradient(circle at 86% 72%, rgba(49, 116, 144, .10), transparent 30%),
-    repeating-linear-gradient(90deg, rgba(30, 55, 84, .028) 0 1px, transparent 1px 86px),
-    repeating-linear-gradient(0deg, rgba(30, 55, 84, .022) 0 1px, transparent 1px 86px);
-}
-
-/* Faraklit agent simulation: restrained motion, consistent with the pre-glass corporate theme. */
-.agent-sim {
-  background-image: linear-gradient(180deg, rgba(248,250,252,.98), rgba(255,255,255,1));
-}
-
-
-/* Product-tour pointer: the desktop demo visibly moves to dock items and clicks them. */
-.demo-cursor-click {
-  animation: demoCursorClick 360ms ease-out both;
-}
-@keyframes demoCursorClick {
-  from { transform: scale(.35); opacity: .9; }
-  to { transform: scale(1.45); opacity: 0; }
-}
-
-/* Voice assistant waveform used in the landing-page simulation. */
-.voice-wave {
-  transform-origin: center;
-  transition: height 260ms ease, background-color 260ms ease;
-  animation: voiceWave 780ms ease-in-out infinite alternate;
-}
-@keyframes voiceWave {
-  from { transform: scaleY(.58); opacity: .68; }
-  to { transform: scaleY(1.12); opacity: 1; }
-}
-
-/* Roadmap activity bars intentionally animate without implying a numerical completion percentage. */
-.roadmap-progress {
-  width: 62%;
-  transform-origin: left;
-  animation: roadmapProgress 2.4s ease-in-out infinite alternate;
-}
-@keyframes roadmapProgress {
-  from { transform: scaleX(.55); opacity: .55; }
-  to { transform: scaleX(1); opacity: 1; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .demo-cursor-click,
-  .voice-wave,
-  .roadmap-progress {
-    animation: none !important;
+/* Thin decorative rule used next to eyebrow labels. */
+@layer components {
+  .accent-rule {
+    display: inline-block;
+    width: 32px;
+    height: 1px;
+    background: #8c8d90;
   }
 }
 
+/* Hero logo: app symbol + wordmark used as a mask over a gradient, so a band of gold light
+   sweeps across the mark every few seconds; a soft gold halo breathes behind it. */
+.hero-mark-wrap {
+  position: relative;
+  display: inline-flex;
+}
+.hero-mark-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -60% -25%;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgba(214, 184, 126, 0.38), rgba(214, 184, 126, 0));
+  filter: blur(6px);
+  animation: heroHalo 6s ease-in-out infinite;
+  pointer-events: none;
+}
+.hero-mark {
+  --h: 34px;
+  position: relative;
+  display: block;
+  height: var(--h);
+  /* symbol (195×192) + gap + wordmark (939×199) drawn at 78% of the symbol height */
+  width: calc(var(--h) * 1.016 + var(--h) * 0.3 + var(--h) * 0.78 * 4.719);
+  background: linear-gradient(100deg, #232426 0%, #232426 38%, #a8853f 45%, #f3e3be 50%, #a8853f 55%, #232426 62%, #232426 100%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-mask-image: url('/assets/logos/faraklit-app-symbol-white.png'), url('/assets/logos/faraklit-wordmark-dark.png');
+  mask-image: url('/assets/logos/faraklit-app-symbol-white.png'), url('/assets/logos/faraklit-wordmark-dark.png');
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 0 50%, 100% 50%;
+  mask-position: 0 50%, 100% 50%;
+  -webkit-mask-size: calc(var(--h) * 1.016) var(--h), calc(var(--h) * 0.78 * 4.719) calc(var(--h) * 0.78);
+  mask-size: calc(var(--h) * 1.016) var(--h), calc(var(--h) * 0.78 * 4.719) calc(var(--h) * 0.78);
+  animation: heroShine 5.5s ease-in-out 0.6s infinite;
+}
+@media (min-width: 640px) {
+  .hero-mark {
+    --h: 42px;
+  }
+}
+@keyframes heroShine {
+  0% {
+    background-position: 100% 0;
+  }
+  45%,
+  100% {
+    background-position: 0% 0;
+  }
+}
+@keyframes heroHalo {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-mark,
+  .hero-mark-wrap::before {
+    animation: none;
+  }
+}
 
-.voice-wallpaper { background: #f7f8fa; }
-.voice-grid { background: none; }
-.command-grid { background: none; }
-.assistant-wallpaper { background: #f7f8fa; }
-.assistant-grid { background: none; }
+/* Faraklit score panel: a thin frame whose gold and graphite tones slowly travel around it. */
+@property --frame-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.faraklit-frame {
+  border-radius: 22px;
+  padding: 1.5px;
+  background: conic-gradient(from var(--frame-angle), #c4a46c, #f3e3be, #8c8d90, #232426, #a8853f, #c4a46c);
+  box-shadow: 0 24px 60px -32px rgba(196, 164, 108, 0.6);
+  animation: faraklitFrame 9s linear infinite;
+}
+@keyframes faraklitFrame {
+  to {
+    --frame-angle: 360deg;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .faraklit-frame {
+    animation: none;
+  }
+}
+
+/* Live wallpaper: faint gold light drifting behind the public pages. */
+.live-wallpaper {
+  background: #f8f6f1;
+}
+.lw-glow {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform;
+}
+.lw-glow-1 {
+  width: 70vmax;
+  height: 70vmax;
+  top: -28vmax;
+  left: -18vmax;
+  background: radial-gradient(circle at center, rgba(214, 184, 126, 0.30), rgba(214, 184, 126, 0) 62%);
+  animation: lwDriftA 58s ease-in-out infinite alternate;
+}
+.lw-glow-2 {
+  width: 80vmax;
+  height: 80vmax;
+  bottom: -38vmax;
+  right: -26vmax;
+  background: radial-gradient(circle at center, rgba(196, 164, 108, 0.24), rgba(196, 164, 108, 0) 60%);
+  animation: lwDriftB 72s ease-in-out infinite alternate;
+}
+.lw-glow-3 {
+  width: 50vmax;
+  height: 50vmax;
+  top: 30%;
+  left: 38%;
+  background: radial-gradient(circle at center, rgba(232, 208, 156, 0.22), rgba(232, 208, 156, 0) 64%);
+  animation: lwDriftC 86s ease-in-out infinite alternate;
+}
+.lw-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@keyframes lwDriftA {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(9vmax, 6vmax, 0) scale(1.08); }
+}
+@keyframes lwDriftB {
+  from { transform: translate3d(0, 0, 0) scale(1.05); }
+  to { transform: translate3d(-10vmax, -7vmax, 0) scale(0.96); }
+}
+@keyframes lwDriftC {
+  from { transform: translate3d(0, 0, 0) scale(0.95); }
+  to { transform: translate3d(-8vmax, 5vmax, 0) scale(1.1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lw-glow { animation: none !important; }
+}
+
+/* Keep in-page anchors clear of the sticky navbar. */
+[id] {
+  scroll-margin-top: 96px;
+}

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { INSTAGRAM_URL } from '@/lib/contact';
 import { ArrowUpRight } from 'lucide-react';
 
 const plans = [
@@ -8,27 +8,27 @@ const plans = [
 
 export function PlansSection() {
   return (
-    <section className="border-b border-[#e3e7eb] bg-white">
-      <div className="mx-auto max-w-8xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+    <section className="border-b border-anthracite/10">
+      <div className="mx-auto max-w-8xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
         <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
           <div>
-            <p className="text-[13px] font-semibold uppercase tracking-[0.17em] text-[#767f88]">Paketler</p>
-            <h2 className="mt-4 font-display text-[32px] font-semibold leading-[1.03] tracking-[-0.045em] text-[#171a20] sm:text-[44px]">
+            <p className="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[0.24em] text-graphite-600"><span className="accent-rule" aria-hidden="true" />Paketler</p>
+            <h2 className="mt-6 font-serif text-[34px] font-normal leading-[1.12] tracking-[-0.02em] text-anthracite sm:text-[42px]">
               Tek başınıza veya ekibinizle.
             </h2>
-            <Link to="/pricing" className="mt-6 inline-flex items-center gap-2 text-[15px] font-semibold text-[#20262d]">
-              Fiyatları incele <ArrowUpRight size={14} />
-            </Link>
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex items-center gap-2 border-b border-anthracite pb-1 text-[15px] font-semibold text-anthracite">
+              Paket bilgisi için bize yazın <ArrowUpRight size={14} />
+            </a>
           </div>
 
-          <div className="border-t border-[#dfe4e8]">
+          <div className="border-t border-paper-300">
             {plans.map(([title, subtitle, details]) => (
-              <div key={title} className="grid gap-2 border-b border-[#dfe4e8] py-6 sm:grid-cols-[180px_1fr] sm:gap-8">
+              <div key={title} className="grid gap-2 border-b border-paper-300 py-7 sm:grid-cols-[200px_1fr] sm:gap-8">
                 <div>
-                  <p className="text-[17px] font-semibold text-[#20262d]">{title}</p>
-                  <p className="mt-1 text-[13px] text-[#8a929a]">{subtitle}</p>
+                  <p className="font-serif text-[22px] text-anthracite">{title}</p>
+                  <p className="mt-1 text-[13px] text-[#818181]">{subtitle}</p>
                 </div>
-                <p className="text-[15px] leading-6 text-[#68717a]">{details}</p>
+                <p className="text-[15px] leading-7 text-[#686868] sm:pt-1.5">{details}</p>
               </div>
             ))}
           </div>
