@@ -39,6 +39,7 @@ const AdminUserDetail = page(() => import('@/pages/admin/AdminUserDetail'), 'Adm
 const AdminLicenses = page(() => import('@/pages/admin/AdminLicenses'), 'AdminLicenses');
 const AdminSales = page(() => import('@/pages/admin/AdminSales'), 'AdminSales');
 const AdminInvoices = page(() => import('@/pages/admin/AdminInvoices'), 'AdminInvoices');
+const AdminPos = page(() => import('@/pages/admin/AdminPos'), 'AdminPos');
 const AdminCredits = page(() => import('@/pages/admin/AdminCredits'), 'AdminCredits');
 const AdminJobs = page(() => import('@/pages/admin/AdminJobs'), 'AdminJobs');
 const AdminActivity = page(() => import('@/pages/admin/AdminActivity'), 'AdminActivity');
@@ -90,6 +91,7 @@ function App() {
               <Route path="/admin/licenses" element={<AdminRoute><AdminLicenses /></AdminRoute>} />
               <Route path="/admin/sales" element={<AdminRoute><AdminSales /></AdminRoute>} />
               <Route path="/admin/invoices" element={<AdminRoute><AdminInvoices /></AdminRoute>} />
+              <Route path="/admin/pos" element={<AdminRoute><AdminPos /></AdminRoute>} />
               <Route path="/admin/credits" element={<AdminRoute><AdminCredits /></AdminRoute>} />
               <Route path="/admin/jobs" element={<AdminRoute><AdminJobs /></AdminRoute>} />
               <Route path="/admin/activity" element={<AdminRoute><AdminActivity /></AdminRoute>} />
