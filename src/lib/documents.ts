@@ -97,7 +97,7 @@ export function openInvoice(invoice: Invoice, payment?: Pick<Payment, 'order_num
       ${row('E-posta', invoice.billing_email || '—')}
       <div class="total"><span class="label">Toplam</span><span class="value">${esc(formatPrice(invoice.amount_cents))}</span></div>
     </div>
-    <div class="footer">Bu belge bilgilendirme amaçlıdır. Resmî e-fatura / e-arşiv faturanız ayrıca e-posta adresinize gönderilir.</div>
+    <div class="footer">Bu belge bilgilendirme amaçlıdır. Resmi e-fatura / e-arşiv faturanız ayrıca e-posta adresinize gönderilir.</div>
   </div>`;
   openDocument(`fatura-${invoice.invoice_number}`, html);
 }

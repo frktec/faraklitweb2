@@ -81,12 +81,12 @@ const reasons = [
   {
     icon: BookCheck,
     title: 'Uydurma karar yok',
-    text: 'Genel yapay zekâ araçları zaman zaman var olmayan karar numaraları üretebilir. Faraklit’in içtihat araması yalnızca resmî kaynaklardaki gerçek kararları getirir; her sonuç esas ve karar numarasıyla, kaynağıyla birlikte gösterilir.',
+    text: 'Genel yapay zeka araçları zaman zaman var olmayan karar numaraları üretebilir. Faraklit’in içtihat araması yalnızca resmi kaynaklardaki gerçek kararları getirir; her sonuç esas ve karar numarasıyla, kaynağıyla birlikte gösterilir.',
   },
   {
     icon: Globe2,
-    title: 'Yapay zekâya yalnızca maskeli veri',
-    text: 'Güçlü yapay zekâ modellerinden yararlanırken içerik önce maskelenir; sağlayıcılara kimliği belirleyen bilgi değil, maskelenmiş metin iletilir.',
+    title: 'Yapay zekaya yalnızca maskeli veri',
+    text: 'Güçlü yapay zeka modellerinden yararlanırken içerik önce maskelenir; sağlayıcılara kimliği belirleyen bilgi değil, maskelenmiş metin iletilir.',
   },
 ];
 
@@ -134,7 +134,7 @@ export function ComparisonSection() {
             <span className="accent-rule hidden sm:inline-block" aria-hidden="true" />
           </p>
           <h2 className="mt-7 font-serif text-[36px] font-normal leading-[1.1] tracking-[-0.02em] text-anthracite sm:text-[50px]">
-            Genel yapay zekâ araçları yazar.
+            Genel yapay zeka araçları yazar.
             <span className="block italic text-anthracite-700">Faraklit büronuzla birlikte çalışır.</span>
           </h2>
           <p className="mx-auto mt-6 max-w-[600px] text-[17px] leading-8 text-[#545454]">

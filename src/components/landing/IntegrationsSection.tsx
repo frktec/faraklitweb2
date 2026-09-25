@@ -1,9 +1,9 @@
 const integrations = [
   ['UYAP', 'Evrakı dosyaya alın, görev ve süreyle ilişkilendirin.'],
   ['UETS', 'Tebligatı eşleştirin, son günü takip edin.'],
-  ['Resmî Gazete', 'Günün mevzuat değişikliklerini görün.'],
+  ['Resmi Gazete', 'Günün mevzuat değişikliklerini görün.'],
   ['Takvim', 'Duruşma, görev ve süreleri birlikte izleyin.'],
-  ['İçtihat Kaynakları', 'Resmî karar kaynaklarında arama yapın.'],
+  ['İçtihat Kaynakları', 'Resmi karar kaynaklarında arama yapın.'],
 ] as const;
 
 export function IntegrationsSection() {

@@ -65,7 +65,7 @@ export function Hero() {
 
       <div id="sesli-asistan" className="mx-auto max-w-[880px] px-4 pb-24 sm:px-6 lg:pb-32">
         <VoiceSimulation />
-        <p className="mt-5 text-center text-[12px] tracking-[0.02em] text-[#8a8a8a]">Sesli asistan · temsilî simülasyon</p>
+        <p className="mt-5 text-center text-[12px] tracking-[0.02em] text-[#8a8a8a]">Sesli asistan · temsili simülasyon</p>
       </div>
 
       <div className="border-y border-anthracite/10 bg-white/55">

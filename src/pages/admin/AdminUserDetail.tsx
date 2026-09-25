@@ -387,7 +387,7 @@ export function AdminUserDetail() {
           title={dialog === 'suspend' ? 'Lisansı askıya al' : 'Lisansı aktifleştir'}
           body={dialog === 'suspend'
             ? 'Lisans askıya alınır ve bu lisansa bağlı tüm cihazların yetkisi kaldırılır. Kullanıcı yeniden aktifleştirilene kadar uygulamayı kullanamaz.'
-            : 'Lisans yeniden aktif hâle gelir. Kullanıcı cihazlarını yeniden kaydedebilir.'}
+            : 'Lisans yeniden aktif hale gelir. Kullanıcı cihazlarını yeniden kaydedebilir.'}
           run={() => supabase.rpc('admin_set_license_status', { p_license_id: license.id, p_status: dialog === 'suspend' ? 'suspended' : 'active' })}
           onClose={() => setDialog(null)}
           onDone={() => done(dialog === 'suspend' ? 'Lisans askıya alındı.' : 'Lisans aktifleştirildi.')}

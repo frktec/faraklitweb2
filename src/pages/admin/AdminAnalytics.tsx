@@ -15,7 +15,7 @@ const moduleLabels: Record<string, string> = {
   'feature.petition.opened': 'Dilekçe',
   'feature.document_analysis.opened': 'Belge Analizi',
   'feature.uets.opened': 'UETS',
-  'feature.official_gazette.opened': 'Resmî Gazete',
+  'feature.official_gazette.opened': 'Resmi Gazete',
   'feature.files.opened': 'Dosyalar',
   'feature.workspace.opened': 'Workspace',
 };

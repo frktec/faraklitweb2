@@ -33,7 +33,7 @@ Bu migration:
 - admin yetkisini `auth.users.raw_app_meta_data.role` kaynağına taşır ve mevcut `profiles.role = 'admin'` hesaplarını geriye dönük olarak eşler,
 - kullanıcıların tarayıcıdan aktif abonelik/lisans/ödeme/fatura oluşturmasını engeller,
 - hashtag ile kullanıcı aramasını sınırlı bir RPC'ye taşır,
-- ekip katılım onayını atomik hâle getirir,
+- ekip katılım onayını atomik hale getirir,
 - e-posta doğrulaması açık olsa bile kayıt profilini güvenli biçimde oluşturur,
 - cihaz kaydını kullanıcının kendi aktif lisansıyla sınırlar.
 
@@ -51,7 +51,7 @@ Kullanıcı çıkış yapıp tekrar giriş yaptığında `/admin` paneline eriş
 
 ## 2. Supabase Auth URL ayarları
 
-Supabase Dashboard > Authentication > URL Configuration altında production domainini Site URL olarak tanımlayın ve en az şu redirect URL'lerini izinli hâle getirin:
+Supabase Dashboard > Authentication > URL Configuration altında production domainini Site URL olarak tanımlayın ve en az şu redirect URL'lerini izinli hale getirin:
 
 - `https://ALAN-ADINIZ/account`
 - `https://ALAN-ADINIZ/reset-password`

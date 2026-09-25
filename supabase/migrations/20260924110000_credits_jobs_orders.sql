@@ -220,11 +220,11 @@ CREATE POLICY "job_types_admin_insert" ON job_types FOR INSERT
 INSERT INTO job_types (key, label, credit_cost, sort_order) VALUES
   ('dilekce', 'Dilekçe üretimi', 10, 1),
   ('ictihat_arama', 'İçtihat araması', 2, 2),
-  ('ai_arastirma', 'Yapay zekâ araştırması', 5, 3),
+  ('ai_arastirma', 'Yapay zeka araştırması', 5, 3),
   ('belge_analizi', 'Belge analizi', 5, 4),
   ('sesli_asistan', 'Sesli asistan komutu', 1, 5),
   ('uets_tebligat', 'UETS tebligat işlemi', 1, 6),
-  ('resmi_gazete', 'Resmî Gazete taraması', 1, 7),
+  ('resmi_gazete', 'Resmi Gazete taraması', 1, 7),
   ('evrak_imza', 'Evrak imzalama', 2, 8),
   ('diger', 'Diğer', 1, 99)
 ON CONFLICT (key) DO NOTHING;

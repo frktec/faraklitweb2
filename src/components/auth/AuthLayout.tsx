@@ -48,7 +48,7 @@ export function AuthLayout({
               {[
                 { icon: Scale, text: 'Dosya ve duruşma yönetimi tek panelde' },
                 { icon: ShieldCheck, text: 'UETS tebligat takibi otomatik' },
-                { icon: Clock, text: 'Yapay zekâ destekli dilekçe hazırlama' },
+                { icon: Clock, text: 'Yapay zeka destekli dilekçe hazırlama' },
               ].map((f) => (
                 <div key={f.text} className="flex items-center gap-3">
                   <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 backdrop-blur-sm">
