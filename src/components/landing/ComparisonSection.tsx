@@ -162,7 +162,7 @@ export function ComparisonSection() {
             </p>
           </div>
           <div className="flex flex-1 flex-col justify-center bg-anthracite px-5 py-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/55">Faraklit</p>
+            <img src="/assets/logos/faraklit-wordmark-white.png" alt="Faraklit" width={939} height={199} className="mx-auto mb-3 h-auto w-[104px]" />
             <p className="mt-1 font-serif text-[18px] text-white sm:text-[22px]">{allRows.length} / {allRows.length}</p>
           </div>
         </div>
