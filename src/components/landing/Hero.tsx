@@ -15,11 +15,13 @@ export function Hero() {
   return (
     <section>
       <div className="mx-auto max-w-[1040px] px-4 pb-16 pt-20 text-center sm:px-6 sm:pt-28 lg:pb-20 lg:pt-36">
-        <p className="inline-flex items-center gap-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#6b6b6b] sm:tracking-[0.32em]">
+        <div className="inline-flex items-center gap-5">
           <span className="accent-rule hidden sm:inline-block" aria-hidden="true" />
-          Avukatlar ve hukuk büroları için
+          <span className="hero-mark-wrap">
+            <span role="img" aria-label="Faraklit" className="hero-mark" />
+          </span>
           <span className="accent-rule hidden sm:inline-block" aria-hidden="true" />
-        </p>
+        </div>
 
         <h1 className="mx-auto mt-9 font-serif text-[42px] font-normal leading-[1.03] tracking-[-0.025em] text-anthracite min-[420px]:text-[50px] sm:text-[68px] lg:text-[86px]">
           Avukatlık mesleği değişiyor.

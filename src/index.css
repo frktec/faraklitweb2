@@ -108,6 +108,74 @@ img, svg, video, canvas {
   }
 }
 
+/* Hero logo: app symbol + wordmark used as a mask over a gradient, so a band of gold light
+   sweeps across the mark every few seconds; a soft gold halo breathes behind it. */
+.hero-mark-wrap {
+  position: relative;
+  display: inline-flex;
+}
+.hero-mark-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -60% -25%;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgba(214, 184, 126, 0.38), rgba(214, 184, 126, 0));
+  filter: blur(6px);
+  animation: heroHalo 6s ease-in-out infinite;
+  pointer-events: none;
+}
+.hero-mark {
+  --h: 34px;
+  position: relative;
+  display: block;
+  height: var(--h);
+  /* symbol (195×192) + gap + wordmark (939×199) drawn at 78% of the symbol height */
+  width: calc(var(--h) * 1.016 + var(--h) * 0.3 + var(--h) * 0.78 * 4.719);
+  background: linear-gradient(100deg, #232426 0%, #232426 38%, #a8853f 45%, #f3e3be 50%, #a8853f 55%, #232426 62%, #232426 100%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-mask-image: url('/assets/logos/faraklit-app-symbol-white.png'), url('/assets/logos/faraklit-wordmark-dark.png');
+  mask-image: url('/assets/logos/faraklit-app-symbol-white.png'), url('/assets/logos/faraklit-wordmark-dark.png');
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 0 50%, 100% 50%;
+  mask-position: 0 50%, 100% 50%;
+  -webkit-mask-size: calc(var(--h) * 1.016) var(--h), calc(var(--h) * 0.78 * 4.719) calc(var(--h) * 0.78);
+  mask-size: calc(var(--h) * 1.016) var(--h), calc(var(--h) * 0.78 * 4.719) calc(var(--h) * 0.78);
+  animation: heroShine 5.5s ease-in-out 0.6s infinite;
+}
+@media (min-width: 640px) {
+  .hero-mark {
+    --h: 42px;
+  }
+}
+@keyframes heroShine {
+  0% {
+    background-position: 100% 0;
+  }
+  45%,
+  100% {
+    background-position: 0% 0;
+  }
+}
+@keyframes heroHalo {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-mark,
+  .hero-mark-wrap::before {
+    animation: none;
+  }
+}
+
 /* Faraklit score panel: a thin frame whose gold and graphite tones slowly travel around it. */
 @property --frame-angle {
   syntax: '<angle>';
