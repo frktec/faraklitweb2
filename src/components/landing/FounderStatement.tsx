@@ -50,7 +50,6 @@ export function FounderStatement() {
               />
             </div>
             <p className="mt-4 text-[16px] font-semibold tracking-[0.01em] text-anthracite">Av. Furkan Tunca</p>
-            <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#8a8a8a]">Kurucu · Faraklit</p>
           </figcaption>
         </figure>
       </div>
