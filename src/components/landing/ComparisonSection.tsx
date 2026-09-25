@@ -1,4 +1,4 @@
-import { Check, Globe2, Minus, Scale, ShieldCheck } from 'lucide-react';
+import { BookCheck, Check, Globe2, Minus, Scale, ShieldCheck } from 'lucide-react';
 import { AiBrandRow } from './AiBrands';
 
 type Level = 'full' | 'partial' | 'none';
@@ -12,6 +12,7 @@ const groups: { title: string; rows: Row[] }[] = [
       { name: 'Dilekçe yazma', note: 'Dosyadaki bilgilerle', general: 'partial' },
       { name: 'Sözleşme yazma', general: 'partial' },
       { name: 'İhtarname oluşturma', general: 'partial' },
+      { name: 'İçtihat arama', note: 'Gerçek kararlar, kaynağıyla · uydurma karar yok', general: 'partial' },
       { name: 'Hukuki soru-cevap motoru', note: 'Türk mevzuatı ve içtihat', general: 'partial' },
     ],
   },
@@ -78,6 +79,11 @@ const reasons = [
     text: 'Avukatlığın sır saklama yükümlülüğü gözetilerek geliştirildi. Müvekkillerinize ait kişisel ve hassas veriler yurt dışına aktarılmaz.',
   },
   {
+    icon: BookCheck,
+    title: 'Uydurma karar yok',
+    text: 'Genel yapay zekâ araçları zaman zaman var olmayan karar numaraları üretebilir. Faraklit’in içtihat araması yalnızca resmî kaynaklardaki gerçek kararları getirir; her sonuç esas ve karar numarasıyla, kaynağıyla birlikte gösterilir.',
+  },
+  {
     icon: Globe2,
     title: 'Yapay zekâya yalnızca maskeli veri',
     text: 'Güçlü yapay zekâ modellerinden yararlanırken içerik önce maskelenir; sağlayıcılara kimliği belirleyen bilgi değil, maskelenmiş metin iletilir.',
@@ -137,7 +143,7 @@ export function ComparisonSection() {
         </div>
 
         {/* Why Faraklit is different */}
-        <div className="mx-auto mt-14 grid max-w-[1080px] gap-px overflow-hidden rounded-[24px] border border-anthracite/10 bg-anthracite/10 md:grid-cols-3">
+        <div className="mx-auto mt-14 grid max-w-[1180px] gap-px overflow-hidden rounded-[24px] border border-anthracite/10 bg-anthracite/10 md:grid-cols-2 xl:grid-cols-4">
           {reasons.map(({ icon: Icon, title, text }) => (
             <div key={title} className="bg-white/75 px-7 py-8">
               <Icon size={20} strokeWidth={1.6} className="text-anthracite" />
