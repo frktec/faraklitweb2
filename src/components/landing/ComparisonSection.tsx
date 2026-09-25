@@ -163,7 +163,9 @@ export function ComparisonSection() {
           </div>
           <div className="flex flex-1 flex-col justify-center bg-anthracite px-5 py-5">
             <div className="mb-3 flex items-center justify-center gap-2.5">
-              <img src="/assets/logos/faraklit-mark-white.png" alt="" aria-hidden="true" width={297} height={242} className="h-[26px] w-auto" />
+              <span className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-white p-[5px] shadow-[0_2px_8px_rgba(0,0,0,0.25)]">
+                <img src="/assets/logos/faraklit-app-symbol.png" alt="" aria-hidden="true" width={195} height={192} className="h-full w-full object-contain" />
+              </span>
               <img src="/assets/logos/faraklit-wordmark-white.png" alt="Faraklit" width={939} height={199} className="h-auto w-[104px]" />
             </div>
             <p className="mt-1 font-serif text-[18px] text-white sm:text-[22px]">{allRows.length} / {allRows.length}</p>
