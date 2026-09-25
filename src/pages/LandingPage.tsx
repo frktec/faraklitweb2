@@ -7,10 +7,12 @@ import { FounderStatement } from '@/components/landing/FounderStatement';
 import { PlansSection } from '@/components/landing/PlansSection';
 import { FinalCTA } from '@/components/landing/FinalCTA';
 import { Footer } from '@/components/landing/Footer';
+import { LiveWallpaper } from '@/components/landing/LiveWallpaper';
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="relative isolate min-h-screen">
+      <LiveWallpaper />
       <Navbar />
       <main>
         <Hero />

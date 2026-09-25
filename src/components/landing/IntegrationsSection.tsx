@@ -8,7 +8,7 @@ const integrations = [
 
 export function IntegrationsSection() {
   return (
-    <section id="entegrasyonlar" className="border-b border-paper-200 bg-paper">
+    <section id="entegrasyonlar" className="border-b border-anthracite/10">
       <div className="mx-auto max-w-8xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
         <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
           <div>

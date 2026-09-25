@@ -1,6 +1,6 @@
 export function FounderStatement() {
   return (
-    <section className="border-b border-paper-200 bg-paper">
+    <section className="border-b border-anthracite/10 bg-white/45">
       <div className="mx-auto max-w-8xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
         <p className="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[0.24em] text-graphite-600"><span className="accent-rule" aria-hidden="true" />Kurucumuzdan</p>
         <blockquote className="mt-8 max-w-[1000px] font-serif text-[22px] font-normal italic leading-[1.3] tracking-[-0.015em] text-anthracite min-[420px]:text-[24px] sm:text-[30px] lg:text-[36px]">

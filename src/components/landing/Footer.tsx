@@ -3,7 +3,7 @@ import { Logo } from '@/components/Logo';
 
 export function Footer() {
   return (
-    <footer className="bg-paper">
+    <footer className="border-t border-anthracite/10">
       <div className="mx-auto max-w-8xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>

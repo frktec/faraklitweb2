@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Navbar } from '@/components/landing/Navbar';
 import { Footer } from '@/components/landing/Footer';
+import { LiveWallpaper } from '@/components/landing/LiveWallpaper';
 
 const phases = [
   {
@@ -68,10 +69,11 @@ export function RoadmapPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#f8f8f8]">
+    <div className="relative isolate min-h-screen">
+      <LiveWallpaper />
       <Navbar />
       <main>
-        <section className="harvey-paper border-b border-[#e3e3e3]">
+        <section className="border-b border-anthracite/10">
           <div className="mx-auto max-w-8xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
             <div className="max-w-[920px]">
               <p className="section-label text-[#676767]">Geliştirme Rotası</p>
@@ -85,7 +87,7 @@ export function RoadmapPage() {
           </div>
         </section>
 
-        <section className="border-b border-[#e3e3e3] bg-white">
+        <section className="border-b border-anthracite/10 bg-white/45">
           <div className="mx-auto max-w-8xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
             <div className="mb-8 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
               <div>
@@ -147,7 +149,7 @@ export function RoadmapPage() {
           </div>
         </section>
 
-        <section className="border-b border-[#e3e3e3] bg-[#f5f5f5]">
+        <section className="border-b border-anthracite/10">
           <div className="mx-auto max-w-8xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
             <div className="grid items-center gap-9 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
               <div>

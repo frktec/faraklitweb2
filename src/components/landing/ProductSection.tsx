@@ -1,5 +1,3 @@
-import { VoiceSimulation } from './VoiceSimulation';
-
 const capabilities = [
   ['01', 'Dosya Yönetimi', 'Evrak, görev, duruşma ve notları aynı dosyada yönetin; ilk derece, istinaf ve temyiz bağlantısını koruyun.'],
   ['02', 'UETS ve Süreler', 'Tebligatı dosyayla eşleştirin, son günü görün; barkod kontrolüyle mükerrer kaydı önleyin.'],
@@ -13,7 +11,7 @@ const capabilities = [
 
 export function ProductSection() {
   return (
-    <section id="urun" className="border-b border-paper-200 bg-white">
+    <section id="urun" className="border-b border-anthracite/10">
       <div className="mx-auto max-w-8xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
           <div>
@@ -42,19 +40,6 @@ export function ProductSection() {
           </dl>
         </div>
 
-        <div className="mt-20 grid gap-10 border-t border-paper-200 pt-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-          <div>
-            <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-graphite-600">Sesli asistan</p>
-            <h3 className="mt-5 max-w-[440px] font-serif text-[30px] font-normal leading-[1.15] tracking-[-0.015em] text-anthracite sm:text-[36px]">
-              Sorun, görev verin; Faraklit işi kayda geçirsin.
-            </h3>
-            <p className="mt-5 max-w-[420px] text-[16px] leading-7 text-[#636363]">
-              Duruşmalarınızı sorabilir, dosyayı özetletebilir ve görev oluşturabilirsiniz.
-            </p>
-          </div>
-
-          <VoiceSimulation />
-        </div>
       </div>
     </section>
   );

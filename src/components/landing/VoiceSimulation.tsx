@@ -149,7 +149,7 @@ export function VoiceSimulation() {
   const running = phase === 'listening' || phase === 'thinking' || phase === 'speaking';
 
   return (
-    <div ref={rootRef} className="overflow-hidden rounded-[8px] border border-paper-300 bg-white">
+    <div ref={rootRef} className="overflow-hidden rounded-[18px] border border-anthracite/10 bg-white/80 shadow-[0_50px_120px_-50px_rgba(35,36,38,0.35)] backdrop-blur-sm">
       <div className="flex items-center justify-between gap-4 border-b border-paper-200 px-5 py-3.5 sm:px-6">
         <div className="flex items-center gap-2.5">
           <span className={`flex h-7 w-7 items-center justify-center rounded-full ${phase === 'listening' ? 'bg-anthracite text-white' : 'bg-paper text-anthracite'}`}>

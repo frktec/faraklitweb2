@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft, BookOpen, FileStack, KeyRound, Mail, Search, ShieldCheck } from 'lucide-react';
 import { Logo } from '@/components/Logo';
+import { LiveWallpaper } from '@/components/landing/LiveWallpaper';
 
 const sections = [
   { icon: KeyRound, title: 'Hesap ve lisans', body: 'Hesap oluşturma, lisansı etkinleştirme, cihaz yönetimi ve ekip erişimi.' },
@@ -13,7 +14,8 @@ const sections = [
 
 export function DocsPage() {
   return (
-    <div className="min-h-screen bg-[#f3f3f3]">
+    <div className="relative isolate min-h-screen">
+      <LiveWallpaper />
       <header className="border-b border-[#d8d8d8]">
         <div className="mx-auto flex h-[70px] max-w-6xl items-center justify-between px-6">
           <Logo />

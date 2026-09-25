@@ -6,7 +6,7 @@ const rows = [
 
 export function SecuritySection() {
   return (
-    <section id="guvenlik" className="bg-anthracite text-white">
+    <section id="guvenlik" className="bg-anthracite/95 text-white">
       <div className="mx-auto max-w-8xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
         <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
           <div>

@@ -3,6 +3,7 @@ import { ArrowRight, Check, CreditCard, Percent, ShieldCheck } from 'lucide-reac
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/landing/Navbar';
 import { Footer } from '@/components/landing/Footer';
+import { LiveWallpaper } from '@/components/landing/LiveWallpaper';
 import { supabase } from '@/lib/supabase';
 import { formatPrice } from '@/lib/format';
 import type { Plan } from '@/types';
@@ -47,10 +48,11 @@ export function PricingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f7f7]">
+    <div className="relative isolate min-h-screen">
+      <LiveWallpaper />
       <Navbar />
       <main>
-        <section className="pricing-wallpaper border-b border-[#e0e0e0]">
+        <section className="border-b border-anthracite/10">
           <div className="mx-auto max-w-8xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
             <div className="mx-auto max-w-[900px] text-center">
               <p className="section-label text-[#636363]">Fiyatlandırma</p>
@@ -68,7 +70,7 @@ export function PricingPage() {
           </div>
         </section>
 
-        <section className="border-b border-[#e3e3e3] bg-[#f9f9f9]">
+        <section className="border-b border-anthracite/10">
           <div className="mx-auto max-w-8xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
             {loading ? (
               <div className="rounded-[18px] border border-[#e3e3e3] bg-white py-20 text-center text-[16px] text-[#737373]">Paketler yükleniyor…</div>

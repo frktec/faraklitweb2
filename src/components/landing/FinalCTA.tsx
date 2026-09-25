@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 
 export function FinalCTA() {
   return (
-    <section className="border-t border-white/10 bg-anthracite py-20 text-white lg:py-24">
+    <section className="bg-anthracite/95 py-24 text-white lg:py-28">
       <div className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-end gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:gap-20">
           <div>

@@ -98,22 +98,71 @@ img, svg, video, canvas {
 .text-xs { font-size: 13px; line-height: 1.25rem; }
 .text-sm { font-size: 15px; line-height: 1.45rem; }
 
-/* Public site surfaces: matte anthracite, light gray paper and a neutral rule. */
-.site-navbar {
-  background: #232426 !important;
-  color: #fff !important;
-}
-.harvey-paper,
-.pricing-wallpaper {
-  background: #f4f4f3;
-}
-.accent-rule {
-  display: inline-block;
-  width: 32px;
-  height: 1px;
-  background: #8c8d90;
+/* Thin decorative rule used next to eyebrow labels. */
+@layer components {
+  .accent-rule {
+    display: inline-block;
+    width: 32px;
+    height: 1px;
+    background: #8c8d90;
+  }
 }
 
 .roadmap-progress {
   width: 62%;
+}
+
+/* Live wallpaper: faint gold light drifting behind the public pages. */
+.live-wallpaper {
+  background: #f8f6f1;
+}
+.lw-glow {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform;
+}
+.lw-glow-1 {
+  width: 70vmax;
+  height: 70vmax;
+  top: -28vmax;
+  left: -18vmax;
+  background: radial-gradient(circle at center, rgba(214, 184, 126, 0.30), rgba(214, 184, 126, 0) 62%);
+  animation: lwDriftA 58s ease-in-out infinite alternate;
+}
+.lw-glow-2 {
+  width: 80vmax;
+  height: 80vmax;
+  bottom: -38vmax;
+  right: -26vmax;
+  background: radial-gradient(circle at center, rgba(196, 164, 108, 0.24), rgba(196, 164, 108, 0) 60%);
+  animation: lwDriftB 72s ease-in-out infinite alternate;
+}
+.lw-glow-3 {
+  width: 50vmax;
+  height: 50vmax;
+  top: 30%;
+  left: 38%;
+  background: radial-gradient(circle at center, rgba(232, 208, 156, 0.22), rgba(232, 208, 156, 0) 64%);
+  animation: lwDriftC 86s ease-in-out infinite alternate;
+}
+.lw-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@keyframes lwDriftA {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(9vmax, 6vmax, 0) scale(1.08); }
+}
+@keyframes lwDriftB {
+  from { transform: translate3d(0, 0, 0) scale(1.05); }
+  to { transform: translate3d(-10vmax, -7vmax, 0) scale(0.96); }
+}
+@keyframes lwDriftC {
+  from { transform: translate3d(0, 0, 0) scale(0.95); }
+  to { transform: translate3d(-8vmax, 5vmax, 0) scale(1.1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lw-glow { animation: none !important; }
 }
