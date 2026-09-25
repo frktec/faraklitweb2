@@ -1,10 +1,9 @@
-import { useState, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { BookCheck, Check, Globe2, Minus, Scale, ShieldCheck } from 'lucide-react';
 import { AiBrandRow } from './AiBrands';
 
 type Level = 'full' | 'partial' | 'none';
 type Row = { name: string; note?: string; general: Level };
-type Column = 'general' | 'faraklit';
 
 // Faraklit covers every row; `general` is how general-purpose AI assistants compare.
 const groups: { title: string; rows: Row[] }[] = [
@@ -33,7 +32,9 @@ const groups: { title: string; rows: Row[] }[] = [
       { name: 'Dava dosyası bağlamı', note: 'Taraflar, evrak, geçmiş işlemler', general: 'partial' },
       { name: 'Türk hukuk pratiğine özel', general: 'partial' },
       { name: 'Ekip çalışması ve roller', general: 'partial' },
+      { name: 'Ekip mesajlaşması', note: 'Büro içi yazışma, dosyayla bağlantılı', general: 'none' },
       { name: 'Faraklit ajanları', note: 'Tekrar eden işleri otomatikleştirir', general: 'partial' },
+      { name: 'Bildirim penceresiyle her an aktif', note: 'Süre, duruşma ve görevler masaüstünüzde', general: 'none' },
     ],
   },
   {
@@ -42,7 +43,16 @@ const groups: { title: string; rows: Row[] }[] = [
       { name: 'UETS tebligat eşleştirme', general: 'none' },
       { name: 'UYAP, DavaTek ve MakbuzTek uyumu', general: 'none' },
       { name: 'Süre hesabı, takvim ve görev', general: 'partial' },
-      { name: 'Word ve UDF editörü', general: 'partial' },
+    ],
+  },
+  {
+    title: 'UDF, Word ve PDF',
+    rows: [
+      { name: 'Entegre UDF editörü', note: 'UDF dosyalarını Faraklit içinde açın ve düzenleyin', general: 'none' },
+      { name: 'Word editörü', general: 'partial' },
+      { name: 'UDF, Word ve PDF dönüştürücüler', general: 'partial' },
+      { name: 'PDF birleştirme ve ayırma', general: 'partial' },
+      { name: 'PDF’i metne çevirme', general: 'full' },
     ],
   },
   {
@@ -58,6 +68,7 @@ const groups: { title: string; rows: Row[] }[] = [
       { name: 'Doküman imzalama', general: 'none' },
       { name: 'E-posta entegrasyonu', note: 'Yazışmalar dosyayla birlikte', general: 'partial' },
       { name: 'Kendi makbuz sağlayıcınıza erişim', note: 'Faraklit’ten çıkmadan', general: 'none' },
+      { name: 'Faraklit Sosyal Editörü', note: 'Instagram ve sosyal medya hesaplarınız için içerik', general: 'partial' },
     ],
   },
   {
@@ -103,69 +114,46 @@ const reasons = [
 const allRows = groups.flatMap((g) => g.rows);
 const count = (level: Level) => allRows.filter((r) => r.general === level).length;
 
-// Shared hover treatment: marks brighten when their row or column is hovered.
-const generalHover = 'transition-all duration-300 group-hover/row:border-anthracite/45 group-hover/row:bg-white';
-const generalActive = 'border-anthracite/45 bg-white';
-
-function GeneralMark({ level, active = false }: { level: Level; active?: boolean }) {
-  const state = active ? generalActive : '';
+function GeneralMark({ level }: { level: Level }) {
   if (level === 'full') {
     return (
-      <span title="Var" className={`flex h-7 w-7 items-center justify-center rounded-full border border-anthracite/30 text-anthracite ${generalHover} ${state}`}>
+      <span title="Var" className="flex h-7 w-7 items-center justify-center rounded-full border border-anthracite/30 text-anthracite">
         <Check size={14} />
       </span>
     );
   }
   if (level === 'partial') {
     return (
-      <span title="Kısmen" className={`flex h-7 w-7 items-center justify-center rounded-full border border-anthracite/20 ${generalHover} ${state}`}>
+      <span title="Kısmen" className="flex h-7 w-7 items-center justify-center rounded-full border border-anthracite/20">
         <span className="h-3 w-3 rounded-full border border-[#8a8a8a] [background:linear-gradient(90deg,#8a8a8a_50%,transparent_50%)]" />
       </span>
     );
   }
   return (
-    <span title="Yok" className={`flex h-7 w-7 items-center justify-center rounded-full border border-anthracite/10 text-[#b0b0b0] ${generalHover} ${active ? 'border-anthracite/30 bg-white text-[#8a8a8a]' : ''}`}>
+    <span title="Yok" className="flex h-7 w-7 items-center justify-center rounded-full border border-anthracite/10 text-[#b0b0b0]">
       <Minus size={14} />
     </span>
   );
 }
 
-// Gold glow taken from the live wallpaper palette.
-const faraklitGlow = 'scale-110 bg-anthracite-900 text-[#F3E3BE] shadow-[0_0_0_4px_rgba(196,164,108,0.22),0_0_20px_rgba(196,164,108,0.6)]';
-
-function FaraklitMark({ active = false }: { active?: boolean }) {
+function FaraklitMark() {
   return (
-    <span
-      title="Var"
-      className={`flex h-7 w-7 items-center justify-center rounded-full bg-anthracite text-white transition-all duration-300 group-hover/row:scale-110 group-hover/row:bg-anthracite-900 group-hover/row:text-[#F3E3BE] group-hover/row:shadow-[0_0_0_4px_rgba(196,164,108,0.22),0_0_20px_rgba(196,164,108,0.6)] ${active ? faraklitGlow : ''}`}
-    >
+    <span title="Var" className="flex h-7 w-7 items-center justify-center rounded-full bg-anthracite text-white transition-colors duration-200 group-hover/row:text-[#F3E3BE]">
       <Check size={14} />
     </span>
   );
 }
 
-// A column cell stretches over the row padding so a hovered column reads as one continuous band.
-function ColumnCell({ column, active, onHover, children }: {
-  column: Column;
-  active: Column | null;
-  onHover: (column: Column | null) => void;
-  children: ReactNode;
-}) {
-  const on = active === column;
-  const band = column === 'faraklit' ? 'bg-[rgba(196,164,108,0.14)]' : 'bg-anthracite/[0.045]';
+// Cells stretch over the row padding so the always-highlighted Faraklit column reads as one band.
+function ColumnCell({ faraklit = false, children }: { faraklit?: boolean; children: ReactNode }) {
   return (
-    <div
-      onMouseEnter={() => onHover(column)}
-      onMouseLeave={() => onHover(null)}
-      className={`-my-3.5 flex w-14 shrink-0 cursor-default items-center justify-center self-stretch py-3.5 transition-colors duration-300 ${on ? band : ''}`}
-    >
+    <div className={`-my-3.5 flex w-14 shrink-0 items-center justify-center self-stretch py-3.5 ${faraklit ? 'bg-[rgba(196,164,108,0.09)]' : ''}`}>
       {children}
     </div>
   );
 }
 
 export function ComparisonSection() {
-  const [column, setColumn] = useState<Column | null>(null);
   return (
     <section id="fark" className="border-b border-anthracite/10">
       <div className="mx-auto max-w-8xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
@@ -187,36 +175,34 @@ export function ComparisonSection() {
         {/* Why Faraklit is different */}
         <div className="mx-auto mt-14 grid max-w-[1180px] gap-px overflow-hidden rounded-[24px] border border-anthracite/10 bg-anthracite/10 md:grid-cols-2 xl:grid-cols-4">
           {reasons.map(({ icon: Icon, title, text }) => (
-            <div key={title} className="group/reason bg-white/75 px-7 py-8 transition-colors duration-300 hover:bg-white">
-              <Icon size={20} strokeWidth={1.6} className="text-anthracite transition-colors duration-300 group-hover/reason:text-[#A8853F]" />
+            <div key={title} className="bg-white/75 px-7 py-8">
+              <Icon size={20} strokeWidth={1.6} className="text-anthracite" />
               <p className="mt-5 font-serif text-[21px] leading-snug text-anthracite">{title}</p>
               <p className="mt-3 text-[14px] leading-6 text-[#5f5f5f]">{text}</p>
             </div>
           ))}
         </div>
 
-        {/* Score */}
-        <div className="mx-auto mt-12 flex max-w-[820px] flex-col items-stretch overflow-hidden rounded-[22px] border sm:flex-row border-anthracite/10 bg-white/70 text-center">
-          <div
-            onMouseEnter={() => setColumn('general')}
-            onMouseLeave={() => setColumn(null)}
-            className={`flex-1 px-5 py-5 transition-colors duration-300 ${column === 'general' ? 'bg-white' : ''}`}
-          >
+        {/* Score: the Faraklit panel stays lit with a slowly shifting gold frame */}
+        <div className="mx-auto mt-12 grid max-w-[820px] gap-3 text-center sm:grid-cols-2">
+          <div className="flex flex-col justify-center rounded-[22px] border border-anthracite/10 bg-white/70 px-5 py-5">
             <AiBrandRow className="mb-3 sm:flex-nowrap" />
             <p className="mt-1 font-serif text-[18px] text-anthracite sm:text-[22px]">
               {count('full')} tam · {count('partial')} kısmi
             </p>
           </div>
-          <div
-            onMouseEnter={() => setColumn('faraklit')}
-            onMouseLeave={() => setColumn(null)}
-            className={`flex flex-1 flex-col justify-center bg-anthracite px-5 py-5 transition-shadow duration-300 ${column === 'faraklit' ? 'shadow-[inset_0_0_0_1px_rgba(196,164,108,0.55),inset_0_0_42px_rgba(196,164,108,0.28)]' : ''}`}
-          >
-            <div className="mb-3 flex items-center justify-center gap-2.5">
-              <img src="/assets/logos/faraklit-app-symbol-white.png" alt="" aria-hidden="true" width={195} height={192} className="h-[34px] w-auto" />
-              <img src="/assets/logos/faraklit-wordmark-white.png" alt="Faraklit" width={939} height={199} className="h-auto w-[104px]" />
+          <div className="faraklit-frame">
+            <div className="relative flex h-full flex-col justify-center rounded-[20.5px] bg-anthracite px-5 py-5">
+              <span className="absolute right-4 top-3.5 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/60">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#E3C68A] shadow-[0_0_8px_rgba(227,198,138,0.9)]" />
+                Aktif
+              </span>
+              <div className="mb-3 flex items-center justify-center gap-2.5">
+                <img src="/assets/logos/faraklit-app-symbol-white.png" alt="" aria-hidden="true" width={195} height={192} className="h-[34px] w-auto" />
+                <img src="/assets/logos/faraklit-wordmark-white.png" alt="Faraklit" width={939} height={199} className="h-auto w-[104px]" />
+              </div>
+              <p className="mt-1 font-serif text-[18px] text-white sm:text-[22px]">{allRows.length} / {allRows.length}</p>
             </div>
-            <p className="mt-1 font-serif text-[18px] text-white sm:text-[22px]">{allRows.length} / {allRows.length}</p>
           </div>
         </div>
 
@@ -225,29 +211,29 @@ export function ComparisonSection() {
           {groups.map((group) => (
             <div
               key={group.title}
-              className="mb-6 break-inside-avoid overflow-hidden rounded-[20px] border border-anthracite/10 bg-white/70 transition-[border-color,box-shadow] duration-300 hover:border-anthracite/25 hover:shadow-[0_28px_60px_-36px_rgba(35,36,38,0.35)]"
+              className="mb-6 break-inside-avoid overflow-hidden rounded-[20px] border border-anthracite/10 bg-white/70"
             >
               <div className="flex items-center gap-2 border-b border-anthracite/10 px-5 py-3.5 sm:px-6">
                 <p className="flex-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#7a7a7a]">{group.title}</p>
-                <ColumnCell column="general" active={column} onHover={setColumn}>
-                  <p className={`text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors duration-300 ${column === 'general' ? 'text-anthracite' : 'text-[#9a9a9a]'}`}>Genel</p>
+                <ColumnCell>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#9a9a9a]">Genel</p>
                 </ColumnCell>
-                <ColumnCell column="faraklit" active={column} onHover={setColumn}>
-                  <p className={`text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors duration-300 ${column === 'faraklit' ? 'text-[#A8853F]' : 'text-anthracite'}`}>Faraklit</p>
+                <ColumnCell faraklit>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#8F7035]">Faraklit</p>
                 </ColumnCell>
               </div>
               <ul className="divide-y divide-anthracite/[0.07]">
                 {group.rows.map((row) => (
-                  <li key={row.name} className="group/row flex items-center gap-2 px-5 py-3.5 transition-colors duration-300 hover:bg-[rgba(196,164,108,0.07)] sm:px-6">
+                  <li key={row.name} className="group/row flex items-center gap-2 px-5 py-3.5 transition-colors duration-200 hover:bg-anthracite/[0.025] sm:px-6">
                     <div className="min-w-0 flex-1">
-                      <p className="text-[15px] font-medium text-anthracite transition-colors duration-300 group-hover/row:text-black">{row.name}</p>
-                      {row.note && <p className="mt-0.5 text-[12px] text-[#8a8a8a] transition-colors duration-300 group-hover/row:text-[#6a6a6a]">{row.note}</p>}
+                      <p className="text-[15px] font-medium text-anthracite">{row.name}</p>
+                      {row.note && <p className="mt-0.5 text-[12px] text-[#8a8a8a]">{row.note}</p>}
                     </div>
-                    <ColumnCell column="general" active={column} onHover={setColumn}>
-                      <GeneralMark level={row.general} active={column === 'general'} />
+                    <ColumnCell>
+                      <GeneralMark level={row.general} />
                     </ColumnCell>
-                    <ColumnCell column="faraklit" active={column} onHover={setColumn}>
-                      <FaraklitMark active={column === 'faraklit'} />
+                    <ColumnCell faraklit>
+                      <FaraklitMark />
                     </ColumnCell>
                   </li>
                 ))}

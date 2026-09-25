@@ -1,10 +1,10 @@
-import { BellRing, FileSignature, Instagram, Mic, Monitor, Smartphone, type LucideIcon } from 'lucide-react';
+import { Check, FileSignature, Instagram, Laptop, Mic, Monitor, Smartphone, type LucideIcon } from 'lucide-react';
 import { Navbar } from '@/components/landing/Navbar';
 import { Footer } from '@/components/landing/Footer';
 import { LiveWallpaper } from '@/components/landing/LiveWallpaper';
 import { INSTAGRAM_URL } from '@/lib/contact';
 
-type Status = 'active' | 'next' | 'planned';
+type Status = 'done' | 'active' | 'next' | 'planned';
 
 type Milestone = {
   title: string;
@@ -20,46 +20,46 @@ type Milestone = {
 const milestones: Milestone[] = [
   {
     title: 'Masaüstü çekirdek',
-    status: 'active',
-    label: 'Şimdi',
-    description: 'Dosya, UETS, görev, içtihat, dilekçe ve ajan altyapısının masaüstü deneyimini olgunlaştırıyoruz.',
+    status: 'done',
+    label: 'Yayında',
+    description: 'Dosya, UETS, görev, içtihat, dilekçe ve ajan altyapısı Windows masaüstünde kullanımda.',
     Icon: Monitor,
     x: 100,
     y: 64,
   },
   {
     title: 'Sesli asistan ve ajanlar',
-    status: 'active',
-    label: 'Geliştiriliyor',
+    status: 'done',
+    label: 'Tamamlandı',
     description: 'Sesli komutlarla dosya sorma, görev oluşturma ve ajanların günlük işleri birlikte tamamlaması.',
     Icon: Mic,
     x: 300,
     y: 176,
   },
   {
-    title: 'Mobil temel',
-    status: 'next',
-    label: 'Sırada',
-    description: 'iOS ve Android’de dosyaları, evrakları, duruşmaları ve görevleri güvenli oturumla görüntüleme.',
+    title: 'iOS ve Android desteği',
+    status: 'active',
+    label: 'Geliştiriliyor',
+    description: 'Dosyalar, evraklar, duruşmalar, görevler ve bildirimler telefon ve tablette.',
     Icon: Smartphone,
     x: 500,
     y: 64,
   },
   {
-    title: 'Mobil işlemler',
-    status: 'planned',
-    label: 'Planlandı',
-    description: 'Görev ve duruşma ekleme, tamamlandı işaretleme, bildirimler ve günlük iş akışı.',
-    Icon: BellRing,
+    title: 'Mobil imza entegrasyonu',
+    status: 'next',
+    label: 'Sırada',
+    description: 'Faraklit’te hazırlanan evrakı telefondan imzalama; imzalı sürüm otomatik olarak dosyada saklanır.',
+    Icon: FileSignature,
     x: 700,
     y: 176,
   },
   {
-    title: 'Mobil evrak imzalama',
+    title: 'macOS desteği',
     status: 'planned',
     label: 'Planlandı',
-    description: 'Faraklit’te hazırlanan evrakı telefondan imza ve onay akışına alma; imzalı sürümü dosyada saklama.',
-    Icon: FileSignature,
+    description: 'Faraklit masaüstü deneyiminin Mac bilgisayarlara taşınması.',
+    Icon: Laptop,
     x: 900,
     y: 64,
   },
@@ -67,8 +67,8 @@ const milestones: Milestone[] = [
 
 // The road winds through every milestone. The first part (up to the last
 // milestone in development) is drawn as travelled road, the rest as planned.
-const TRAVELLED_ROAD = 'M0 150 C40 150 55 64 100 64 C200 64 200 176 300 176';
-const PLANNED_ROAD = 'M300 176 C400 176 400 64 500 64 C600 64 600 176 700 176 C800 176 800 64 900 64 C945 64 960 110 1000 110';
+const TRAVELLED_ROAD = 'M0 150 C40 150 55 64 100 64 C200 64 200 176 300 176 C400 176 400 64 500 64';
+const PLANNED_ROAD = 'M500 64 C600 64 600 176 700 176 C800 176 800 64 900 64 C945 64 960 110 1000 110';
 
 // Faint contour lines give the panel the feel of a printed map.
 const CONTOURS = [
@@ -82,23 +82,32 @@ const MAP_HEIGHT = 240;
 
 function Pin({ milestone, size = 'md' }: { milestone: Milestone; size?: 'md' | 'sm' }) {
   const tone =
-    milestone.status === 'active'
+    milestone.status === 'done'
       ? 'bg-anthracite text-white shadow-[0_10px_24px_-8px_rgba(35,36,38,0.55)]'
+      : milestone.status === 'active'
+        ? 'border-2 border-[#C4A46C] bg-anthracite text-[#F3E3BE] shadow-[0_0_0_5px_rgba(196,164,108,0.25),0_10px_28px_-6px_rgba(196,164,108,0.7)]'
       : milestone.status === 'next'
         ? 'border-2 border-anthracite bg-white text-anthracite'
         : 'border border-anthracite/25 bg-white text-graphite-600';
   const box = size === 'md' ? 'h-12 w-12' : 'h-11 w-11';
   return (
-    <span className={`flex ${box} items-center justify-center rounded-full ring-[6px] ring-[#f8f6f1] ${tone}`}>
+    <span className={`relative flex ${box} items-center justify-center rounded-full ${milestone.status === 'active' ? '' : 'ring-[6px] ring-[#f8f6f1]'} ${tone}`}>
       <milestone.Icon size={size === 'md' ? 19 : 17} strokeWidth={1.7} />
+      {milestone.status === 'done' && (
+        <span className="absolute -bottom-0.5 -right-0.5 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-white text-anthracite ring-2 ring-[#f8f6f1]">
+          <Check size={11} strokeWidth={2.6} />
+        </span>
+      )}
     </span>
   );
 }
 
 function StatusChip({ milestone }: { milestone: Milestone }) {
   const tone =
-    milestone.status === 'active'
+    milestone.status === 'done'
       ? 'bg-anthracite text-white'
+      : milestone.status === 'active'
+        ? 'bg-[rgba(196,164,108,0.2)] text-[#7A5E28]'
       : milestone.status === 'next'
         ? 'border border-anthracite/40 text-anthracite'
         : 'border border-anthracite/15 text-graphite-600';
@@ -196,7 +205,7 @@ function DesktopMap() {
 }
 
 function MobileMap() {
-  const lastTravelled = milestones.reduce((last, m, i) => (m.status === 'active' ? i : last), 0);
+  const lastTravelled = milestones.reduce((last, m, i) => (m.status === 'done' || m.status === 'active' ? i : last), 0);
   return (
     <ol className="lg:hidden">
       {milestones.map((m, i) => {
@@ -229,7 +238,7 @@ function Legend() {
   return (
     <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[12px] text-[#6a6a6a]">
       <span className="inline-flex items-center gap-2">
-        <span className="h-2.5 w-8 rounded-full bg-anthracite-800" /> Geliştirilen yol
+        <span className="h-2.5 w-8 rounded-full bg-anthracite-800" /> Tamamlanan yol
       </span>
       <span className="inline-flex items-center gap-2">
         <span className="h-2.5 w-8 rounded-full border border-paper-300 bg-[#EEEEEC]" /> Planlanan yol
@@ -269,7 +278,7 @@ export function RoadmapPage() {
               <span className="block italic text-anthracite-700">Masaüstünden cebinize.</span>
             </h1>
             <p className="mx-auto mt-7 max-w-[620px] text-[17px] leading-8 text-[#545454]">
-              Bugün üzerinde çalıştığımız adımları ve sıradaki durakları tek haritada gösteriyoruz.
+              Tamamlanan adımları, bugün üzerinde çalıştıklarımızı ve sıradaki durakları tek haritada gösteriyoruz.
             </p>
           </div>
         </section>

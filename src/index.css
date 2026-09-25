@@ -108,6 +108,30 @@ img, svg, video, canvas {
   }
 }
 
+/* Faraklit score panel: a thin frame whose gold and graphite tones slowly travel around it. */
+@property --frame-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.faraklit-frame {
+  border-radius: 22px;
+  padding: 1.5px;
+  background: conic-gradient(from var(--frame-angle), #c4a46c, #f3e3be, #8c8d90, #232426, #a8853f, #c4a46c);
+  box-shadow: 0 24px 60px -32px rgba(196, 164, 108, 0.6);
+  animation: faraklitFrame 9s linear infinite;
+}
+@keyframes faraklitFrame {
+  to {
+    --frame-angle: 360deg;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .faraklit-frame {
+    animation: none;
+  }
+}
+
 /* Live wallpaper: faint gold light drifting behind the public pages. */
 .live-wallpaper {
   background: #f8f6f1;
