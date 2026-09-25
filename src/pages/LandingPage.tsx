@@ -1,6 +1,7 @@
 import { Navbar } from '@/components/landing/Navbar';
 import { Hero } from '@/components/landing/Hero';
 import { ProductSection } from '@/components/landing/ProductSection';
+import { ComparisonSection } from '@/components/landing/ComparisonSection';
 import { IntegrationsSection } from '@/components/landing/IntegrationsSection';
 import { SecuritySection } from '@/components/landing/SecuritySection';
 import { FounderStatement } from '@/components/landing/FounderStatement';
@@ -17,6 +18,7 @@ export function LandingPage() {
       <main>
         <Hero />
         <ProductSection />
+        <ComparisonSection />
         <IntegrationsSection />
         <SecuritySection />
         <FounderStatement />

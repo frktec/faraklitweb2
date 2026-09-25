@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Instagram, Menu, X } from 'lucide-react';
+import { INSTAGRAM_URL } from '@/lib/contact';
 import { Logo } from '@/components/Logo';
 
 const navLinks = [
   { label: 'Ürün', href: '/#urun' },
+  { label: 'Neden Faraklit', href: '/#fark' },
   { label: 'Entegrasyonlar', href: '/#entegrasyonlar' },
   { label: 'Güvenlik', href: '/#guvenlik' },
   { label: 'Yol Haritası', href: '/roadmap' },
@@ -51,7 +53,7 @@ export function Navbar() {
       <div className="mx-auto flex h-[64px] max-w-8xl items-center justify-between px-4 sm:h-[76px] sm:px-6 lg:px-8">
         <div className="flex min-w-0 items-center gap-12">
           <Logo className="shrink-0" />
-          <nav className="hidden items-center gap-8 lg:flex" aria-label="Ana menü">
+          <nav className="hidden items-center gap-8 xl:flex" aria-label="Ana menü">
             {navLinks.map((link) => (
               <button
                 key={link.label}
@@ -65,14 +67,14 @@ export function Navbar() {
           </nav>
         </div>
 
-        <div className="hidden items-center gap-6 lg:flex">
-          <Link to="/login" className="text-[14px] font-medium text-anthracite/75 transition-colors hover:text-anthracite">Giriş yap</Link>
-          <Link to="/pricing" className="rounded-full bg-anthracite px-5 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-black">Paketleri inceleyin</Link>
+        <div className="hidden items-center gap-6 xl:flex">
+          <Link to="/login" className="whitespace-nowrap text-[14px] font-medium text-anthracite/75 transition-colors hover:text-anthracite">Giriş yap</Link>
+          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-anthracite px-5 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-black"><Instagram size={15} />İletişime geçin</a>
         </div>
 
         <button
           type="button"
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-anthracite/15 text-anthracite hover:bg-white/60 lg:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-anthracite/15 text-anthracite hover:bg-white/60 xl:hidden"
           onClick={() => setMobileOpen((value) => !value)}
           aria-label={mobileOpen ? 'Menüyü kapat' : 'Menüyü aç'}
           aria-expanded={mobileOpen}
@@ -82,7 +84,7 @@ export function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-anthracite/10 px-4 py-4 sm:px-6 lg:hidden">
+        <div className="border-t border-anthracite/10 px-4 py-4 sm:px-6 xl:hidden">
           <nav className="flex flex-col" aria-label="Mobil menü">
             {navLinks.map((link) => (
               <button
@@ -96,7 +98,7 @@ export function Navbar() {
             ))}
             <div className="mt-4 grid grid-cols-2 gap-2">
               <Link to="/login" className="rounded-full border border-anthracite/20 px-4 py-3 text-center text-[15px] font-medium text-anthracite">Giriş yap</Link>
-              <Link to="/pricing" className="rounded-full bg-anthracite px-4 py-3 text-center text-[15px] font-medium text-white">Paketler</Link>
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="rounded-full bg-anthracite px-4 py-3 text-center text-[15px] font-medium text-white">İletişime geçin</a>
             </div>
           </nav>
         </div>

@@ -166,3 +166,8 @@ img, svg, video, canvas {
 @media (prefers-reduced-motion: reduce) {
   .lw-glow { animation: none !important; }
 }
+
+/* Keep in-page anchors clear of the sticky navbar. */
+[id] {
+  scroll-margin-top: 96px;
+}

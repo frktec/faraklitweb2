@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Logo } from '@/components/Logo';
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/lib/contact';
 
 export function Footer() {
   return (
@@ -16,7 +17,10 @@ export function Footer() {
           <FooterCol title="Kaynaklar" links={[{ label: 'Dokümantasyon', href: '/docs' }, { label: 'Destek', href: '/account/support' }]} />
           <div>
             <p className="mb-4 text-[12px] font-semibold uppercase tracking-[0.22em] text-graphite-600">İletişim</p>
-            <a href="mailto:destek@faraklit.com" className="text-[15px] text-anthracite transition-colors hover:text-graphite-600">destek@faraklit.com</a>
+            <ul className="space-y-2.5">
+              <li><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="text-[15px] text-anthracite transition-colors hover:text-graphite-600">Instagram · {INSTAGRAM_HANDLE}</a></li>
+              <li><a href="mailto:destek@faraklit.com" className="text-[15px] text-anthracite transition-colors hover:text-graphite-600">destek@faraklit.com</a></li>
+            </ul>
           </div>
         </div>
         <div className="mt-12 flex flex-col gap-2 border-t border-paper-300 pt-6 text-[14px] text-[#818181] sm:flex-row sm:items-center sm:justify-between">

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { INSTAGRAM_URL } from '@/lib/contact';
 import { ArrowUpRight } from 'lucide-react';
 
 const plans = [
@@ -16,9 +16,9 @@ export function PlansSection() {
             <h2 className="mt-6 font-serif text-[34px] font-normal leading-[1.12] tracking-[-0.02em] text-anthracite sm:text-[42px]">
               Tek başınıza veya ekibinizle.
             </h2>
-            <Link to="/pricing" className="mt-8 inline-flex items-center gap-2 border-b border-anthracite pb-1 text-[15px] font-semibold text-anthracite">
-              Paketleri inceleyin <ArrowUpRight size={14} />
-            </Link>
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex items-center gap-2 border-b border-anthracite pb-1 text-[15px] font-semibold text-anthracite">
+              Paket bilgisi için bize yazın <ArrowUpRight size={14} />
+            </a>
           </div>
 
           <div className="border-t border-paper-300">

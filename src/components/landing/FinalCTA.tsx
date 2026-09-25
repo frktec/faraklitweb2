@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { Instagram } from 'lucide-react';
+import { INSTAGRAM_URL } from '@/lib/contact';
 
 export function FinalCTA() {
   return (
@@ -14,10 +15,10 @@ export function FinalCTA() {
           </div>
           <div>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Link to="/pricing" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[4px] bg-paper px-7 text-[15px] font-semibold text-anthracite transition-colors hover:bg-white">
-                Paketleri inceleyin <ArrowRight size={16} />
-              </Link>
-              <Link to="/login" className="inline-flex min-h-12 items-center justify-center rounded-[4px] border border-white/25 px-7 text-[15px] font-semibold text-white transition-colors hover:border-white/50">
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full bg-white px-7 text-[15px] font-medium text-anthracite transition-colors hover:bg-paper">
+                <Instagram size={17} /> Instagram’dan iletişime geçin
+              </a>
+              <Link to="/login" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 px-7 text-[15px] font-medium text-white transition-colors hover:border-white/50">
                 Giriş yapın
               </Link>
             </div>

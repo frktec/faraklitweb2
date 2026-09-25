@@ -1,5 +1,5 @@
-import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ArrowDown, Instagram } from 'lucide-react';
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/lib/contact';
 import { VoiceSimulation } from './VoiceSimulation';
 
 const pillars = [
@@ -21,33 +21,39 @@ export function Hero() {
           <span className="accent-rule hidden sm:inline-block" aria-hidden="true" />
         </p>
 
-        <h1 className="mx-auto mt-9 font-serif text-[44px] font-normal leading-[1.02] tracking-[-0.025em] text-anthracite min-[420px]:text-[52px] sm:text-[72px] lg:text-[92px]">
-          Hukuk büronuzun işleri,
-          <span className="block italic text-anthracite-700">tek bir düzende.</span>
+        <h1 className="mx-auto mt-9 font-serif text-[42px] font-normal leading-[1.03] tracking-[-0.025em] text-anthracite min-[420px]:text-[50px] sm:text-[68px] lg:text-[86px]">
+          Avukatlık mesleği değişiyor.
+          <span className="block italic text-anthracite-700">Büronuzu dijitale taşıyın.</span>
         </h1>
 
-        <p className="mx-auto mt-9 max-w-[620px] text-[17px] leading-8 text-[#545454] sm:text-[18px]">
-          Faraklit; dosyaları, UETS tebligatlarını, süreleri, içtihat araştırmasını ve dilekçeleri
-          ekibinizle birlikte kullandığınız güvenli bir çalışma alanında bir araya getirir.
+        <p className="mx-auto mt-9 max-w-[640px] text-[17px] leading-8 text-[#545454] sm:text-[18px]">
+          Dosyalar, tebligatlar, süreler ve dilekçeler artık klasörlerde ve tablolarda yönetilemeyecek kadar çok.
+          Faraklit, büronuzun tüm işini ekibinizle birlikte kullandığınız güvenli bir dijital çalışma alanına taşır.
         </p>
 
         <div className="mt-11 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-          <Link
-            to="/pricing"
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-full bg-anthracite px-8 text-[15px] font-medium tracking-[0.01em] text-white transition-colors hover:bg-black"
           >
-            Paketleri inceleyin
-            <ArrowRight size={16} />
-          </Link>
-          <Link
-            to="/register"
-            className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-anthracite/20 bg-white/50 px-8 text-[15px] font-medium tracking-[0.01em] text-anthracite transition-colors hover:border-anthracite/40 hover:bg-white/80"
+            <Instagram size={17} />
+            Instagram’dan iletişime geçin
+          </a>
+          <a
+            href="#sesli-asistan"
+            className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-anthracite/20 bg-white/50 px-8 text-[15px] font-medium tracking-[0.01em] text-anthracite transition-colors hover:border-anthracite/40 hover:bg-white/80"
           >
-            Hesap oluşturun
-          </Link>
+            Faraklit’i tanıyın
+            <ArrowDown size={16} />
+          </a>
         </div>
+        <p className="mt-5 text-[13px] text-[#7a7a7a]">
+          Paketler ve fiyatlar hakkında bilgi almak için {INSTAGRAM_HANDLE} hesabımızdan bize yazın.
+        </p>
 
-        <ul className="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+        <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
           {assurances.map((item) => (
             <li key={item} className="flex items-center gap-2.5 text-[13px] tracking-[0.02em] text-[#6b6b6b]">
               <span className="h-1 w-1 rotate-45 bg-anthracite/40" aria-hidden="true" />
