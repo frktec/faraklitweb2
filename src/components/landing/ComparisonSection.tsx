@@ -1,4 +1,5 @@
-import { Check, Minus } from 'lucide-react';
+import { Check, Globe2, Minus, Scale, ShieldCheck } from 'lucide-react';
+import { AiBrandRow } from './AiBrands';
 
 type Level = 'full' | 'partial' | 'none';
 type Row = { name: string; note?: string; general: Level };
@@ -6,12 +7,22 @@ type Row = { name: string; note?: string; general: Level };
 // Faraklit covers every row; `general` is how general-purpose AI assistants compare.
 const groups: { title: string; rows: Row[] }[] = [
   {
+    title: 'Hukuki yazım ve bilgi',
+    rows: [
+      { name: 'Dilekçe yazma', note: 'Dosyadaki bilgilerle', general: 'partial' },
+      { name: 'Sözleşme yazma', general: 'partial' },
+      { name: 'İhtarname oluşturma', general: 'partial' },
+      { name: 'Hukuki soru-cevap motoru', note: 'Türk mevzuatı ve içtihat', general: 'partial' },
+    ],
+  },
+  {
     title: 'Çalışma biçimi',
     rows: [
       { name: 'Büronuzun kayıtlarının içinde çalışır', general: 'none' },
       { name: 'Dava dosyası bağlamı', note: 'Taraflar, evrak, geçmiş işlemler', general: 'partial' },
       { name: 'Türk hukuk pratiğine özel', general: 'partial' },
       { name: 'Ekip çalışması ve roller', general: 'partial' },
+      { name: 'Faraklit ajanları', note: 'Tekrar eden işleri otomatikleştirir', general: 'partial' },
     ],
   },
   {
@@ -52,6 +63,24 @@ const groups: { title: string; rows: Row[] }[] = [
       { name: 'Uygulama içi web tarayıcısı', general: 'partial' },
       { name: 'Büronuza özel entegrasyonlar', general: 'partial' },
     ],
+  },
+];
+
+const reasons = [
+  {
+    icon: Scale,
+    title: 'Türk hukuku için geliştirildi',
+    text: 'UYAP, UETS, usul süreleri ve Türk mevzuatı esas alınarak kurgulandı. Dilekçe, sözleşme ve ihtarname Türk hukuk pratiğine göre hazırlanır.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Veriler yurt dışına aktarılmaz',
+    text: 'Avukatlığın sır saklama yükümlülüğü gözetilerek geliştirildi. Müvekkillerinize ait kişisel ve hassas veriler yurt dışına aktarılmaz.',
+  },
+  {
+    icon: Globe2,
+    title: 'Yapay zekâya yalnızca maskeli veri',
+    text: 'Güçlü yapay zekâ modellerinden yararlanırken içerik önce maskelenir; sağlayıcılara kimliği belirleyen bilgi değil, maskelenmiş metin iletilir.',
   },
 ];
 
@@ -103,19 +132,30 @@ export function ComparisonSection() {
             <span className="block italic text-anthracite-700">Faraklit büronuzla birlikte çalışır.</span>
           </h2>
           <p className="mx-auto mt-6 max-w-[600px] text-[17px] leading-8 text-[#545454]">
-            Gemini, ChatGPT ve Claude güçlü genel asistanlardır. Faraklit ise avukatlık bürosunun günlük işi için kurgulandı.
+            ChatGPT, Claude ve Gemini güçlü genel asistanlardır. Faraklit ise avukatlık bürosunun günlük işi ve Türk hukuku için kurgulandı.
           </p>
         </div>
 
+        {/* Why Faraklit is different */}
+        <div className="mx-auto mt-14 grid max-w-[1080px] gap-px overflow-hidden rounded-[24px] border border-anthracite/10 bg-anthracite/10 md:grid-cols-3">
+          {reasons.map(({ icon: Icon, title, text }) => (
+            <div key={title} className="bg-white/75 px-7 py-8">
+              <Icon size={20} strokeWidth={1.6} className="text-anthracite" />
+              <p className="mt-5 font-serif text-[21px] leading-snug text-anthracite">{title}</p>
+              <p className="mt-3 text-[14px] leading-6 text-[#5f5f5f]">{text}</p>
+            </div>
+          ))}
+        </div>
+
         {/* Score */}
-        <div className="mx-auto mt-12 flex max-w-[640px] items-stretch overflow-hidden rounded-[22px] border sm:rounded-full border-anthracite/10 bg-white/70 text-center">
-          <div className="flex-1 px-5 py-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8a8a8a]">Genel asistanlar</p>
+        <div className="mx-auto mt-12 flex max-w-[820px] flex-col items-stretch overflow-hidden rounded-[22px] border sm:flex-row border-anthracite/10 bg-white/70 text-center">
+          <div className="flex-1 px-5 py-5">
+            <AiBrandRow className="mb-3 sm:flex-nowrap" />
             <p className="mt-1 font-serif text-[18px] text-anthracite sm:text-[22px]">
               {count('full')} tam · {count('partial')} kısmi
             </p>
           </div>
-          <div className="flex-1 bg-anthracite px-5 py-4">
+          <div className="flex flex-1 flex-col justify-center bg-anthracite px-5 py-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/55">Faraklit</p>
             <p className="mt-1 font-serif text-[18px] text-white sm:text-[22px]">{allRows.length} / {allRows.length}</p>
           </div>
